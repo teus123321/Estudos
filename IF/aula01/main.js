@@ -1,25 +1,19 @@
 const button = document.getElementById("button")
+const email = document.getElementById("email")
+const senha = document.getElementById("password")
 
-if (button) {
-    button.addEventListener('click', () => {
 
-        event.preventDefault();
+button.addEventListener("click", function (event) {
 
-        const textoOriginal = button.textContent
+    event.preventDefault();
 
-        button.textContent = "Carregando...";
-        button.disabled = true;
-        button.style.opacity = "0.5";
-        button.style.cursor = "not-allowed";
+    if (email.value.trim() === "" || senha.value.trim() === "") {
+        alert("Por favor, preencha todos os campos.");
 
-        setTimeout(() => {
-            button.textContent = textoOriginal
-            button.disabled = false
-            button.style.opacity = "1"
-            button.style.cursor = "pointer"
-            alert("Você está na página do poema !")
+    } else {
+        alert("Login realizado com sucesso!");
+        window.location.href = "index.html";
+    }
 
-            window.location.href=button.href
-        }, 2000)
-    })
-}
+})
+

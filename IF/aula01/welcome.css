@@ -1,0 +1,13 @@
+.container{
+    margin: 0 auto;          /* Adicione isso para centralizar o container */
+    display: flex;
+    justify-content: center; /* Isso continua aqui para centralizar o que estiver DENTRO dele */
+    width: 100%;
+    max-width: 600px;
+    aspect-ratio: 1 / 1;
+    background-color: #ffffff;
+    border-radius: 16px;
+    padding: 32px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
