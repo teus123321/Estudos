@@ -1,0 +1,9 @@
+.boas-vindas {
+    width: 150px;  /* Você pode mudar esse valor para o tamanho que desejar */
+    height: auto;  /* Mantém a proporção original da imagem */
+}
+
+.boas-vindas {
+    max-width: 100%; /* A imagem pode diminuir, mas nunca vai ultrapassar 100% do espaço disponível */
+    height: auto;
+}
