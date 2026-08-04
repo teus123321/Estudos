@@ -3,7 +3,7 @@
     display: flex;
     justify-content: center; /* Isso continua aqui para centralizar o que estiver DENTRO dele */
     width: 100%;
-    height: 50vh;           /* Faz o container ocupar toda a altura da tela */
+    height: 60vh;           /* Faz o container ocupar toda a altura da tela */
     max-width: 600px;
     aspect-ratio: 1 / 1;
     background-color: #ffffff;
