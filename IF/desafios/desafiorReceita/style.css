@@ -1,0 +1,121 @@
+/* Importa a fonte 'Poppins' do Google Fonts para um visual limpo e moderno */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
+/* Reset básico para remover margens padrão do navegador */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #fcf9f2; /* Cor de fundo creme suave, lembrando baunilha */
+    color: #4a3b32; /* Marrom escuro para o texto, lembrando chocolate */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+/* O "cartão" principal branco que engloba tudo */
+.container {
+    background-color: #ffffff;
+    max-width: 700px;
+    width: 100%;
+    padding: 40px;
+    border-radius: 24px; /* Bordas bem arredondadas */
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.05); /* Sombra elegante e difusa */
+    text-align: center;
+}
+
+/* Estilizando a imagem do bolo */
+#icon {
+    width: 100%;
+    max-width: 250px;
+    height: auto;
+    border-radius: 20px;
+    margin-bottom: 25px;
+    transition: transform 0.3s ease; /* Animação suave */
+}
+
+/* Efeito de zoom ao passar o mouse na imagem */
+#icon:hover {
+    transform: scale(1.05) rotate(-2deg);
+}
+
+.detalhes h1 {
+    font-size: 2rem;
+    color: #c96b42; /* Tom de caramelo avermelhado para destaque */
+    margin-bottom: 10px;
+}
+
+.detalhes p {
+    font-size: 1rem;
+    color: #8c7365;
+    margin-bottom: 35px;
+}
+
+/* Container para alinhar os dois cards menores (Ingredientes e Preparo) lado a lado */
+.cards-wrapper {
+    display: flex;
+    gap: 20px;
+    justify-content: space-between;
+    flex-wrap: wrap; /* Permite que os cards fiquem um embaixo do outro no celular */
+}
+
+/* Estilo base dos cards de receita */
+.card-one, .card-two {
+    background-color: #fff9f5;
+    padding: 25px;
+    border-radius: 16px;
+    flex: 1; /* Faz os dois cards terem o mesmo tamanho */
+    min-width: 250px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.03);
+    border: 1px solid #f2e2d9;
+    text-align: left;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Efeito de flutuar ao passar o mouse nos cards */
+.card-one:hover, .card-two:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 25px rgba(201, 107, 66, 0.15);
+    cursor: pointer;
+}
+
+.card-one h3, .card-two h3 {
+    margin-bottom: 15px;
+    font-size: 1.2rem;
+    color: #4a3b32;
+    border-bottom: 2px solid #c96b42;
+    display: inline-block;
+    padding-bottom: 5px;
+}
+
+/* Estilo da lista */
+ul {
+    list-style-type: none; /* Remove a bolinha feia padrão do HTML */
+}
+
+ul li {
+    font-size: 0.95rem;
+    margin-bottom: 12px;
+    padding-left: 24px;
+    position: relative;
+    color: #5c473c;
+}
+
+/* Criando um marcador personalizado (bolinha colorida) para a lista */
+ul li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 10px;
+    height: 10px;
+    background-color: #c96b42;
+    border-radius: 50%;
+}
