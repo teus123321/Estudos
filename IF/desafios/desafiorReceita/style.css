@@ -10,8 +10,8 @@
 
 body {
     font-family: 'Poppins', sans-serif;
-    background-color: #fcf9f2; /* Cor de fundo creme suave, lembrando baunilha */
-    color: #4a3b32; /* Marrom escuro para o texto, lembrando chocolate */
+    background-color: #fcf9f2; /* Cor de fundo creme suave */
+    color: #4a3b32; /* Marrom escuro para o texto */
     display: flex;
     justify-content: center;
     align-items: center;
@@ -25,24 +25,9 @@ body {
     max-width: 700px;
     width: 100%;
     padding: 40px;
-    border-radius: 24px; /* Bordas bem arredondadas */
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.05); /* Sombra elegante e difusa */
+    border-radius: 24px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.05);
     text-align: center;
-}
-
-/* Estilizando a imagem do bolo */
-#icon {
-    width: 100%;
-    max-width: 250px;
-    height: auto;
-    border-radius: 20px;
-    margin-bottom: 25px;
-    transition: transform 0.3s ease; /* Animação suave */
-}
-
-/* Efeito de zoom ao passar o mouse na imagem */
-#icon:hover {
-    transform: scale(1.05) rotate(-2deg);
 }
 
 .detalhes h1 {
@@ -57,46 +42,90 @@ body {
     margin-bottom: 35px;
 }
 
-/* Container para alinhar os dois cards menores (Ingredientes e Preparo) lado a lado */
+/* Container para alinhar os dois cards lado a lado */
 .cards-wrapper {
     display: flex;
     gap: 20px;
     justify-content: space-between;
-    flex-wrap: wrap; /* Permite que os cards fiquem um embaixo do outro no celular */
+    flex-wrap: wrap;
 }
 
-/* Estilo base dos cards de receita */
-.card-one, .card-two {
-    background-color: #fff9f5;
-    padding: 25px;
-    border-radius: 16px;
-    flex: 1; /* Faz os dois cards terem o mesmo tamanho */
+/* Container de cada card que dá a ilusão 3D */
+.card-container {
+    flex: 1;
     min-width: 250px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.03);
-    border: 1px solid #f2e2d9;
-    text-align: left;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-/* Efeito de flutuar ao passar o mouse nos cards */
-.card-one:hover, .card-two:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 12px 25px rgba(201, 107, 66, 0.15);
+    height: 280px;
+    perspective: 1000px; 
     cursor: pointer;
 }
 
-.card-one h3, .card-two h3 {
+/* O elemento interno que realmente gira */
+.card-inner {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    transition: transform 0.6s ease-in-out;
+    transform-style: preserve-3d;
+}
+
+/* A classe que o seu JavaScript vai adicionar para girar a carta */
+.card-inner.virado {
+    transform: rotateY(180deg);
+}
+
+/* Estilos gerais compartilhados para frente e verso */
+.card-front, .card-back {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    backface-visibility: hidden;
+    border-radius: 16px;
+    padding: 25px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.03);
+    border: 1px solid #f2e2d9;
+    background-color: #fff9f5;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Frente do Card */
+.card-front {
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.card-front h3 {
+    color: #c96b42;
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+}
+
+.card-front p {
+    color: #8c7365;
+    font-size: 0.9rem;
+}
+
+/* Verso do Card */
+.card-back {
+    transform: rotateY(180deg); /* O verso já começa de costas */
+    justify-content: flex-start;
+}
+
+.card-back h3 {
     margin-bottom: 15px;
     font-size: 1.2rem;
     color: #4a3b32;
     border-bottom: 2px solid #c96b42;
     display: inline-block;
     padding-bottom: 5px;
+    text-align: left;
 }
 
 /* Estilo da lista */
 ul {
-    list-style-type: none; /* Remove a bolinha feia padrão do HTML */
+    list-style-type: none;
+    text-align: left;
 }
 
 ul li {
@@ -107,7 +136,7 @@ ul li {
     color: #5c473c;
 }
 
-/* Criando um marcador personalizado (bolinha colorida) para a lista */
+/* Marcador personalizado (bolinha colorida) */
 ul li::before {
     content: '';
     position: absolute;
