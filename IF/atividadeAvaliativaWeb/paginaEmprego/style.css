@@ -1,0 +1,279 @@
+:root {
+    --primary-color: #2563eb;
+    --primary-hover: #1d4ed8;
+    --text-main: #1f2937;
+    --text-muted: #4b5563;
+    --bg-main: #f3f4f6;
+    --bg-card: #ffffff;
+    --border-color: #e5e7eb;
+    
+    /* Cores das etiquetas (tags) */
+    --tag-remote-bg: #dcfce7;
+    --tag-remote-text: #166534;
+    --tag-clt-bg: #dbeafe;
+    --tag-clt-text: #1e40af;
+    --tag-level-bg: #fef3c7;
+    --tag-level-text: #92400e;
+}
+
+/* Box model */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background-color: var(--bg-main);
+    color: var(--text-main);
+    display: flex;
+    justify-content: center;
+    padding: 3rem 1.5rem;
+    line-height: 1.6;
+}
+
+.job-card {
+    background-color: var(--bg-card);
+    width: 100%;
+    max-width: 800px;
+    border-radius: 16px;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    padding: 2.5rem;
+    border: 1px solid var(--border-color);
+}
+
+/* Cabeçalho com Flexbox */
+.job-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.company-logo {
+    width: 56px;
+    height: 56px;
+    background: linear-gradient(135deg, var(--primary-color), #8b5cf6);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(37, 99, 235, 0.2);
+}
+
+.company-name {
+    font-size: 1.25rem;
+    color: var(--text-muted);
+    font-weight: 600;
+}
+
+/* Título e Etiquetas */
+.job-title-section {
+    margin-bottom: 2rem;
+}
+
+.job-title {
+    font-size: 2.25rem;
+    font-weight: 800;
+    margin-bottom: 1rem;
+    color: #111827;
+    line-height: 1.2;
+}
+
+.job-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+}
+
+/* Estilo das etiquetas */
+.tag {
+    padding: 0.35rem 0.85rem;
+    border-radius: 9999px;
+    font-size: 0.875rem;
+    font-weight: 600;
+}
+
+.tag-remote {
+    background-color: var(--tag-remote-bg);
+    color: var(--tag-remote-text);
+}
+
+.tag-clt {
+    background-color: var(--tag-clt-bg);
+    color: var(--tag-clt-text);
+}
+
+.tag-level {
+    background-color: var(--tag-level-bg);
+    color: var(--tag-level-text);
+}
+
+/* Faixa salarial e Botão com Flexbox */
+.salary-apply-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #f8fafc;
+    padding: 1.5rem 2rem;
+    border-radius: 12px;
+    margin-bottom: 2.5rem;
+    border: 1px solid var(--border-color);
+}
+
+.salary-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.salary-label {
+    font-size: 0.875rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 600;
+}
+
+.salary-value {
+    font-size: 1.75rem;
+    font-weight: 800;
+    color: #0f172a;
+}
+
+/* Botão em destaque */
+.apply-button {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 0.875rem 2.5rem;
+    font-size: 1.125rem;
+    font-weight: 600;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s facil-in-out;
+    box-shadow: 0 4px 6px rgba(37, 99, 235, 0.25);
+}
+
+/* Efeito de hover no botão */
+.apply-button:hover {
+    background-color: var(--primary-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 8px rgba(37, 99, 235, 0.35);
+}
+
+/* Estilos de Seções */
+section > h3 {
+    font-size: 1.5rem;
+    color: #111827;
+    margin-bottom: 1.25rem;
+    position: relative;
+    padding-bottom: 0.5rem;
+}
+
+section > h3::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 48px;
+    height: 4px;
+    background-color: var(--primary-color);
+    border-radius: 2px;
+}
+
+.job-description {
+    margin-bottom: 2.5rem;
+}
+
+.job-description p {
+    color: var(--text-muted);
+    font-size: 1.05rem;
+}
+
+/* Lista de requisitos - Marcador personalizado */
+.job-requirements {
+    margin-bottom: 2.5rem;
+}
+
+.requirements-list {
+    list-style: none; /* Remove marcadores originais */
+}
+
+.requirements-list li {
+    position: relative;
+    padding-left: 2rem;
+    margin-bottom: 1rem;
+    color: var(--text-muted);
+    font-size: 1.05rem;
+}
+
+/* Adicionando marcador customizado */
+.requirements-list li::before {
+    content: '✓';
+    position: absolute;
+    left: 0;
+    top: 0;
+    color: white;
+    background-color: var(--primary-color);
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: bold;
+    margin-top: 4px;
+}
+
+/* Benefícios - CSS Grid */
+.job-benefits {
+    margin-bottom: 1rem;
+}
+
+.benefits-grid {
+    display: grid;
+    /* Grid dinâmico e responsivo */
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 1.25rem;
+}
+
+.benefit-item {
+    background-color: #f8fafc;
+    border: 1px solid var(--border-color);
+    padding: 1.25rem;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    color: var(--text-muted);
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.benefit-item:hover {
+    border-color: var(--primary-color);
+    background-color: #eff6ff;
+    color: #1e40af;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
+
+/* Responsividade básica para a faixa salarial */
+@media (max-width: 600px) {
+    .salary-apply-section {
+        flex-direction: column;
+        gap: 1.5rem;
+        align-items: stretch;
+        text-align: center;
+    }
+    
+    .apply-button {
+        width: 100%;
+    }
+}
