@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Status do Sistema - TechCorp</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Fontes do Google -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <!-- Cabeçalho -->
+        <header class="page-header">
+            <div class="logo">TC</div>
+            <h1>Status do Sistema</h1>
+        </header>
+
+        <!-- Banner de Status Geral -->
+        <section class="status-banner status-warning">
+            <h2>Alguns sistemas estão enfrentando problemas</h2>
+        </section>
+
+        <!-- Layout Grid para organizar as seções principais -->
+        <div class="dashboard-grid">
+            <div class="main-column">
+                
+                <!-- Lista de Serviços (Flexbox) -->
+                <section class="services-list">
+                    <h3>Status dos Serviços</h3>
+                    
+                    <div class="service-item">
+                        <span class="service-name">API Principal</span>
+                        <span class="service-badge badge-operational">Operacional</span>
+                    </div>
+                    <div class="service-item">
+                        <span class="service-name">Banco de Dados</span>
+                        <span class="service-badge badge-operational">Operacional</span>
+                    </div>
+                    <div class="service-item">
+                        <span class="service-name">Autenticação (SSO)</span>
+                        <span class="service-badge badge-degraded">Desempenho Degradado</span>
+                    </div>
+                    <div class="service-item">
+                        <span class="service-name">Dashboard Analytics</span>
+                        <span class="service-badge badge-operational">Operacional</span>
+                    </div>
+                    <div class="service-item">
+                        <span class="service-name">Sistema de Pagamentos</span>
+                        <span class="service-badge badge-outage">Fora do Ar</span>
+                    </div>
+                </section>
+
+                <!-- Seção de Disponibilidade (CSS Grid) -->
+                <section class="availability-section">
+                    <h3>Disponibilidade (Últimos 60 dias)</h3>
+                    
+                    <div class="uptime-grid">
+                        <!-- Gerando 60 barras para representar histórico com Grid -->
+                        <div class="uptime-bar bar-up" title="Operacional"></div>
+                        <div class="uptime-bar bar-up" title="Operacional"></div>
+                        <div class="uptime-bar bar-up" title="Operacional"></div>
+                        <div class="uptime-bar bar-up" title="Operacional"></div>
+                        <div class="uptime-bar bar-up" title="Operacional"></div>
+                        <div class="uptime-bar bar-up" title="Operacional"></div>
+                        <div class="uptime-bar bar-up" title="Operacional"></div>
+                        <div class="uptime-bar bar-up" title="Operacional"></div>
+                        <div class="uptime-bar bar-up" title="Operacional"></div>
+                        <div class="uptime-bar bar-up" title="Operacional"></div>
+                        <div class="uptime-bar bar-degraded" title="Desempenho Degradado"></div>
+                        <div class="uptime-bar bar-up" title="Operacional"></div>
+                        <div class="uptime-bar bar-up" title="Operacional"></div>
+                        <div class="uptime-bar bar-up" title="Operacional"></div>
+                        <div class="uptime-bar bar-up" title="Operacional"></div>
+                        <div class="uptime-bar bar-up" title="Operacional"></div>
+                        <div class="uptime-bar bar-up" title="Operacional"></div>
+                        <div class="uptime-bar bar-up" title="Operacional"></div>
+                        <div class="uptime-bar bar-up" title="Operacional"></div>
+                        <div class="uptime-bar bar-up" title="Operacional"></div>
+                        <div class="uptime-bar bar-up" title="Operacional"></div>
+                        <div class="uptime-bar bar-up" title="Operacional"></div>
+                        <div class="uptime-bar bar-up" title="Operacional"></div>
+                        <div class="uptime-bar bar-up" title="Operacional"></div>
+                        <div class="uptime-bar bar-up" title="Operacional"></div>
+                        <div class="uptime-bar bar-up" title="Operacional"></div>
+                        <div class="uptime-bar bar-up" title="Operacional"></div>
+                        <div class="uptime-bar bar-up" title="Operacional"></div>
+                        <div class="uptime-bar bar-up" title="Operacional"></div>
+                        <div class="uptime-bar bar-up" title="Operacional"></div>
+                        <div class="uptime-bar bar-up" title="Operacional"></div>
+                        <div class="uptime-bar bar-up" title="Operacional"></div>
+                        <div class="uptime-bar bar-up" title="Operacional"></div>
+                        <div class="uptime-bar bar-up" title="Operacional"></div>
+                        <div class="uptime-bar bar-up" title="Operacional"></div>
+                        <div class="uptime-bar bar-up" title="Operacional"></div>
+                        <div class="uptime-bar bar-outage" title="Fora do Ar"></div>
+                        <div class="uptime-bar bar-up" title="Operacional"></div>
+                        <div class="uptime-bar bar-up" title="Operacional"></div>
+                        <div class="uptime-bar bar-up" title="Operacional"></div>
+                        <div class="uptime-bar bar-up" title="Operacional"></div>
+                        <div class="uptime-bar bar-up" title="Operacional"></div>
+                        <div class="uptime-bar bar-up" title="Operacional"></div>
+                        <div class="uptime-bar bar-up" title="Operacional"></div>
+                        <div class="uptime-bar bar-up" title="Operacional"></div>
+                        <div class="uptime-bar bar-up" title="Operacional"></div>
+                        <div class="uptime-bar bar-up" title="Operacional"></div>
+                        <div class="uptime-bar bar-up" title="Operacional"></div>
+                        <div class="uptime-bar bar-up" title="Operacional"></div>
+                        <div class="uptime-bar bar-up" title="Operacional"></div>
+                        <div class="uptime-bar bar-up" title="Operacional"></div>
+                        <div class="uptime-bar bar-up" title="Operacional"></div>
+                        <div class="uptime-bar bar-up" title="Operacional"></div>
+                        <div class="uptime-bar bar-up" title="Operacional"></div>
+                        <div class="uptime-bar bar-outage" title="Fora do Ar"></div>
+                        <div class="uptime-bar bar-up" title="Operacional"></div>
+                        <div class="uptime-bar bar-up" title="Operacional"></div>
+                        <div class="uptime-bar bar-up" title="Operacional"></div>
+                        <div class="uptime-bar bar-up" title="Operacional"></div>
+                        <div class="uptime-bar bar-up" title="Operacional"></div>
+                    </div>
+                    
+                    <div class="uptime-legend">
+                        <span class="legend-text">60 dias atrás</span>
+                        <span class="legend-uptime">98.5% uptime</span>
+                        <span class="legend-text">Hoje</span>
+                    </div>
+                </section>
+            </div>
+            
+            <div class="side-column">
+                <!-- Seção de Incidentes Recentes -->
+                <section class="incidents-section">
+                    <h3>Incidentes Recentes</h3>
+                    
+                    <div class="incident-card">
+                        <div class="incident-date">21 de Agosto, 2026</div>
+                        <h4 class="incident-title">Falha no Sistema de Pagamentos</h4>
+                        <div class="incident-updates">
+                            <div class="update-item">
+                                <span class="update-status status-investigating">Investigando</span>
+                                <span class="update-text">Estamos observando uma falha generalizada no processamento de pagamentos. Nossa equipe já está atuando no caso.</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="incident-card">
+                        <div class="incident-date">10 de Agosto, 2026</div>
+                        <h4 class="incident-title">Instabilidade na Autenticação</h4>
+                        <div class="incident-updates">
+                            <div class="update-item">
+                                <span class="update-status status-resolved">Resolvido</span>
+                                <span class="update-text">O problema com nosso provedor de SSO foi mitigado e os serviços voltaram ao normal.</span>
+                            </div>
+                            <div class="update-item">
+                                <span class="update-status status-investigating">Investigando</span>
+                                <span class="update-text">Identificamos lentidão no login via SSO. O time de infraestrutura está apurando a causa raiz.</span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
