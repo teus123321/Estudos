@@ -1,0 +1,280 @@
+:root {
+    --bg-color: #f9fafb;
+    --text-main: #111827;
+    --text-muted: #6b7280;
+    --border-color: #e5e7eb;
+    --card-bg: #ffffff;
+    
+    /* Cores de Status (Sinais) */
+    --color-operational: #10b981; /* Verde */
+    --color-operational-bg: #d1fae5;
+    
+    --color-degraded: #f59e0b; /* Amarelo/Laranja */
+    --color-degraded-bg: #fef3c7;
+    
+    --color-outage: #ef4444; /* Vermelho */
+    --color-outage-bg: #fee2e2;
+    
+    --color-warning: #f97316; /* Laranja forte */
+}
+
+/* Box model universal */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-main);
+    line-height: 1.6;
+    padding: 3rem 1.5rem;
+}
+
+.container {
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+/* Cabeçalho */
+.page-header {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    margin-bottom: 2rem;
+}
+
+.logo {
+    width: 48px;
+    height: 48px;
+    background: linear-gradient(135deg, #4f46e5, #8b5cf6);
+    color: white;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 1.25rem;
+    box-shadow: 0 4px 6px rgba(79, 70, 229, 0.2);
+}
+
+.page-header h1 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #111827;
+}
+
+/* Banner de Status Geral */
+.status-banner {
+    padding: 1.25rem 1.5rem;
+    border-radius: 10px;
+    margin-bottom: 2.5rem;
+    color: white;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+}
+
+.status-banner h2 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    letter-spacing: 0.025em;
+}
+
+.status-operational-banner {
+    background-color: var(--color-operational);
+}
+
+.status-warning {
+    background-color: var(--color-warning);
+}
+
+/* Layout Principal usando CSS Grid para organizar colunas */
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 2rem;
+}
+
+/* Responsividade do Grid Principal */
+@media (max-width: 850px) {
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Estilo Comum das Seções */
+section {
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 1.75rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
+}
+
+section h3 {
+    font-size: 1.25rem;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--border-color);
+    color: var(--text-main);
+    font-weight: 600;
+}
+
+/* =========================================
+   Lista de Serviços - Layout com Flexbox 
+   ========================================= */
+.services-list {
+    display: flex;
+    flex-direction: column;
+}
+
+.service-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.25rem 0;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.service-item:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.service-name {
+    font-weight: 500;
+    font-size: 1.05rem;
+    color: #1f2937;
+}
+
+.service-badge {
+    padding: 0.35rem 0.85rem;
+    border-radius: 9999px;
+    font-size: 0.875rem;
+    font-weight: 600;
+}
+
+.badge-operational {
+    background-color: var(--color-operational-bg);
+    color: #065f46;
+}
+
+.badge-degraded {
+    background-color: var(--color-degraded-bg);
+    color: #92400e;
+}
+
+.badge-outage {
+    background-color: var(--color-outage-bg);
+    color: #991b1b;
+}
+
+/* =========================================
+   Seção de Disponibilidade - CSS Grid 
+   ========================================= */
+.uptime-grid {
+    display: grid;
+    /* Grid de repetição para encaixar até 60 barras na mesma linha */
+    grid-template-columns: repeat(60, 1fr);
+    gap: 3px;
+    height: 45px;
+    margin-bottom: 1rem;
+}
+
+.uptime-bar {
+    border-radius: 3px;
+    transition: opacity 0.2s;
+    cursor: pointer;
+}
+
+.uptime-bar:hover {
+    opacity: 0.75;
+    transform: scaleY(1.1);
+}
+
+/* Cores das barras individuais */
+.bar-up {
+    background-color: var(--color-operational);
+}
+
+.bar-degraded {
+    background-color: var(--color-degraded);
+}
+
+.bar-outage {
+    background-color: var(--color-outage);
+}
+
+/* Legenda do histórico */
+.uptime-legend {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.875rem;
+    color: var(--text-muted);
+}
+
+.legend-text {
+    font-weight: 500;
+}
+
+.legend-uptime {
+    font-weight: 700;
+    color: var(--color-operational);
+}
+
+/* =========================================
+   Seção de Incidentes 
+   ========================================= */
+.incident-card {
+    margin-bottom: 2rem;
+}
+
+.incident-card:last-child {
+    margin-bottom: 0;
+}
+
+.incident-date {
+    font-size: 0.875rem;
+    color: var(--text-muted);
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+}
+
+.incident-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    color: var(--text-main);
+}
+
+.incident-updates {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    border-left: 2px solid var(--border-color);
+    padding-left: 1rem;
+}
+
+.update-item {
+    font-size: 0.95rem;
+    color: var(--text-muted);
+    line-height: 1.5;
+}
+
+.update-status {
+    font-weight: 700;
+    margin-right: 0.5rem;
+}
+
+.status-resolved {
+    color: var(--color-operational);
+}
+
+.status-investigating {
+    color: var(--color-degraded);
+}

@@ -1,0 +1,66 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+}
+
+
+body {
+    background: linear-gradient(135deg, #1e293b, #0f172a); /* Fundo escuro moderno (gradiente) */
+    color: #ffffff; /* Texto branco */
+    display: flex;
+    justify-content: center; /* Centraliza horizontalmente */
+    align-items: center;     /* Centraliza verticalmente */
+    min-height: 100vh;       /* Ocupa 100% da altura da tela */
+    padding: 20px;     /* Centraliza o texto dentro das divs */
+}
+
+.container {
+    background-color: rgba(255, 255, 255, 0.05); /* Fundo levemente transparente */
+    backdrop-filter: blur(10px); /* Efeito de vidro borrado */
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px; /* Bordas arredondadas */
+    padding: 40px 30px;
+    width: 100%;
+    max-width: 350px; /* Largura máxima do cartão */
+    text-align: center; /* Centraliza todo o texto interno */
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);               /* Ocupa toda a largura disponível */
+}
+
+.welcome h1 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+
+.welcome h2 {
+    font-size: 1rem;
+    color: #94a3b8; /* Cor cinza clara para a profissão */
+    font-weight: 400;
+    margin-bottom: 30px;
+}
+
+.links {
+    display: flex;
+    flex-direction: column; /* Coloca um botão embaixo do outro */
+    gap: 15px;
+}
+
+.btn {
+    text-decoration: none; /* Remove o sublinhado padrão do link */
+    color: #ffffff;
+    background-color: rgba(255, 255, 255, 0.1); /* Cor de fundo do botão */
+    padding: 15px 20px; /* Espaçamento interno (altura x largura) */
+    border-radius: 50px; /* Deixa o botão com formato de pílula */
+    font-weight: 500;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    transition: all 0.3s ease;
+}
+
+.btn:hover {
+    background-color: #38bdf8; /* Muda para azul claro */
+    color: #0f172a; /* Muda o texto para escuro */
+    transform: translateY(-3px); /* Faz o botão "pular" para cima */
+    box-shadow: 0 5px 15px rgba(56, 189, 248, 0.4);
+}

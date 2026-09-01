@@ -1,0 +1,14 @@
+/* Estilizando a imagem do bolo */
+#icon {
+    width: 100%;
+    max-width: 250px;
+    height: auto;
+    border-radius: 20px;
+    margin-bottom: 25px;
+    transition: transform 0.3s ease; /* Animação suave */
+}
+
+/* Efeito de zoom ao passar o mouse na imagem */
+#icon:hover {
+    transform: scale(1.05) rotate(-2deg);
+}

@@ -1,0 +1,22 @@
+.navegar{
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+}
+
+#button{
+    text-decoration: none;
+    background-color: #007BFF; /* Cor de fundo (azul) */
+    color: white;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-family: Arial, sans-serif;
+    font-weight: bold;
+    font-size: 16px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.botao-link:hover {
+    background-color: #0056b3; /* Muda para um azul mais escuro */
+    transform: scale(1.05);    /* Dá uma leve aumentada no tamanho */
+}

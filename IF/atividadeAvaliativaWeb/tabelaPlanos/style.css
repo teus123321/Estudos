@@ -1,0 +1,100 @@
+/* Reset Básico */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    background-color: #f4f5f7;
+    padding: 50px 20px;
+}
+
+/* Seletor de ID e Classe combinados */
+#planos-pricing {
+    max-width: 1000px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+#planos-pricing h1 {
+    margin-bottom: 40px;
+    color: #172b4d;
+}
+
+/* --- Layout com CSS Grid (Obrigatório) --- */
+.grid-planos {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* Cria 3 colunas de tamanhos iguais */
+    gap: 30px;
+    align-items: center; /* Centraliza verticalmente para o destaque funcionar bem */
+}
+
+/* --- Box Model e Flexbox Interno --- */
+.cartao-plano {
+    background-color: #ffffff;
+    border: 1px solid #dfe1e6;
+    border-radius: 8px;
+    padding: 30px;
+    display: flex;
+    flex-direction: column; /* Organiza o conteúdo interno de cima para baixo */
+    height: 100%;
+}
+
+/* --- Destaque do Plano do Meio --- */
+.plano-destaque {
+    border: 2px solid #0052cc;
+    position: relative;
+    transform: scale(1.05); /* Faz o cartão ficar levemente maior */
+    box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+}
+
+.selo-popular {
+    position: absolute;
+    top: -12px;
+    left: 50%;
+    transform: translateX(-50%); /* Centraliza o selo no topo */
+    background-color: #0052cc;
+    color: white;
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+/* --- Tipografia e Listas --- */
+.cartao-plano h2 { color: #172b4d; margin-bottom: 5px; }
+.descricao { color: #6b778c; font-size: 14px; margin-bottom: 20px; }
+.preco { font-size: 32px; color: #172b4d; margin-bottom: 20px; }
+.preco span { font-size: 16px; color: #6b778c; }
+
+.recursos {
+    list-style: none; /* Remove os "pontinhos" da lista */
+    margin-bottom: 30px;
+    text-align: left;
+    flex-grow: 1; /* Empurra o botão sempre para o final do cartão */
+}
+.recursos li { margin-bottom: 10px; font-size: 14px; color: #42526e; }
+
+/* --- Botão CTA com :hover (Obrigatório) --- */
+.btn-cta {
+    background-color: #ebecf0;
+    color: #172b4d;
+    border: none;
+    padding: 12px;
+    border-radius: 4px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    width: 100%;
+}
+
+.btn-cta:hover { background-color: #dfe1e6; }
+
+/* Botão específico do plano de destaque */
+.plano-destaque .btn-cta {
+    background-color: #0052cc;
+    color: white;
+}
+.plano-destaque .btn-cta:hover { background-color: #0043a6; }

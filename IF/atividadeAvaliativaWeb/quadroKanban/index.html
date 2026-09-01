@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quadro Kanban</title>
+    
+    <!-- Link para o arquivo CSS externo -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Quadro de Tarefas</h1>
+        
+        <div class="kanban-board">
+            <!-- Coluna A Fazer -->
+            <section class="kanban-column">
+                <div class="column-header">
+                    <h2>A Fazer</h2>
+                    <span class="counter">2</span>
+                </div>
+                
+                <div class="kanban-card">
+                    <span class="tag tag-frontend">Frontend</span>
+                    <h3>Estilizar o mini Jira</h3>
+                    <div class="card-footer">
+                        <div class="avatar">MH</div>
+                    </div>
+                </div>
+
+                <div class="kanban-card">
+                    <span class="tag tag-bug">Bug</span>
+                    <h3>Corrigir tag HTML</h3>
+                    <div class="card-footer">
+                        <div class="avatar">MH</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Coluna Fazendo -->
+            <section class="kanban-column">
+                <div class="column-header">
+                    <h2>Fazendo</h2>
+                    <span class="counter">0</span>
+                </div>
+                <!-- Cartões entram aqui -->
+            </section>
+
+            <!-- Coluna Concluídas -->
+            <section class="kanban-column">
+                <div class="column-header">
+                    <h2>Concluído</h2>
+                    <span class="counter">0</span>
+                </div>
+                <!-- Cartões entram aqui -->
+            </section>
+        </div>
+    </div>
+</body>
+</html>
