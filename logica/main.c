@@ -2,7 +2,30 @@
 
 #define valorMaximo 100;
 
-#include<stdio.h>
+/*
+Troca por ponteiro — Escreva void troca(int *a, int *b) que troca o valor de duas variáveis.
+
+Soma via ponteiro — Função que recebe um array e seu tamanho, e retorna a soma percorrendo o array só com aritmética de ponteiros (sem array[i]).
+
+Maior e menor — Função void min_max(int *v, int n, int *menor, int *maior) que preenche os ponteiros menor e maior com os valores extremos do array.
+
+Inverter array in-place — Função que inverte um array usando dois ponteiros (um no início, outro no fim) que se movem um em direção ao outro.
+
+Strlen manual — Implemente sua própria int minha_strlen(char *s) usando ponteiro (sem usar string.h).
+
+Strcpy manual — Implemente void minha_strcpy(char *dest, char *src).
+
+Contar vogais com ponteiro — Função que recebe char *s e retorna quantas vogais tem, andando o ponteiro com s++.
+
+Alocação dinâmica — Peça um número n ao usuário, aloque um array de n inteiros com malloc, preencha, some e depois dê free.
+
+Ponteiro para ponteiro — Escreva uma função que recebe int **matriz, int linhas, int colunas (matriz alocada dinamicamente) e imprime todos os valores.
+
+Lista ligada simples — Crie uma struct No { int valor; struct No *prox; }, e escreva uma função inserir_fim que adiciona um nó no final de uma lista ligada.
+
+*/
+
+
 
 #define MAX 100
 
@@ -37,6 +60,29 @@ void imprimir(Lista *lista) {
     };
 };
 
+//Troca por ponteiro — Escreva void troca(int *a, int *b) que troca o valor de duas variáveis.
+void trocarPonteiro(int a, int b){
+    int *aux = &a;
+    int *auxTwo = &b;
+    int *temp = aux;
+    aux = auxTwo;
+    auxTwo = temp;
+    printf("%d, %d\n", *aux,*auxTwo);
+}
+
+//Soma via ponteiro — Função que recebe um array e seu tamanho, e retorna a soma percorrendo o array só com aritmética de ponteiros (sem array[i]).
+void somaArray(int tamanho) {
+    int list[tamanho];
+    int *lista = list;
+    int soma = 0;
+    for (int i = 0; i<tamanho; i++) {
+        *lista = i;
+        soma += *lista;
+        printf("%d", soma);
+    }
+}
+
+
 int main(void) {
     /*unsigned char nome[] = "Mateus";
     const long double i = -20.0000;
@@ -46,7 +92,6 @@ int main(void) {
     printf("Imprimindo o nome : %s", nome);
     int a;
     printf("Imprimindo endereco de memoria : %x\n", &a);
-    */
     Lista lista;
     lista.segundo = 0;
     /*inserir(&lista, 10);
@@ -54,12 +99,16 @@ int main(void) {
     inserir(&lista, 10);
     imprimir(&lista);
     delete(&lista, 10);
-    imprimir(&lista); */
+    imprimir(&lista);
     inserir(&lista, 20);
     inserir(&lista, 40);
     inserir(&lista, 50);
     imprimir(&lista);
     delete(&lista, 40);
     imprimir(&lista);
+    */
+
+    trocarPonteiro( 1,4);
+    somaArray(4);
     return 0;
 }
