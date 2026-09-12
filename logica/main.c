@@ -82,6 +82,22 @@ void somaArray(int tamanho) {
     }
 }
 
+void test() {
+    int n = 5;
+    int *ptr;
+    ptr = (int *) malloc((n * sizeof(int)));
+
+    if (ptr != NULL) {
+        printf("Malloc alocado. Alocacaoo de memoria dinanica efetuada\n");
+
+        for (int i = 0; i < n; i++) {
+            ptr[i] = i;
+        }
+
+        for (int j = 0; j < n; j++){
+            printf("%d", ptr[j]);
+        }
+    }
 
 int main(void) {
     /*unsigned char nome[] = "Mateus";
