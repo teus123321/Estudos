@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 
 #define valorMaximo 100;
 
@@ -98,33 +99,68 @@ void test() {
             printf("%d", ptr[j]);
         }
     }
+}
+
+
+typedef struct No {
+    int number;
+    struct No *next;
+} No ;
+
+void insere(No **lista, int number) {
+    No *ptr =(No *) malloc(sizeof(No));
+
+    ptr->number = number;
+    ptr->next = *lista;
+    *lista = ptr;
+
+}
+
+void imprimindo(No *lista) {
+
+    No *atual = lista;
+
+    while (atual != NULL) {
+        printf("%d\n", atual->number);
+        atual = atual->next;
+    }
+}
 
 int main(void) {
-    /*unsigned char nome[] = "Mateus";
-    const long double i = -20.0000;
-    printf("Imprimindo a variavel long double : %.2f\n", (float)i, "|");
-    printf("Solucao correta :\n");
-    printf("Imprimindo a variavel long double : %.10Lf\n", i);
-    printf("Imprimindo o nome : %s", nome);
-    int a;
-    printf("Imprimindo endereco de memoria : %x\n", &a);
-    Lista lista;
-    lista.segundo = 0;
-    /*inserir(&lista, 10);
-    printf("Hello, World!\n");
-    inserir(&lista, 10);
-    imprimir(&lista);
-    delete(&lista, 10);
-    imprimir(&lista);
-    inserir(&lista, 20);
-    inserir(&lista, 40);
-    inserir(&lista, 50);
-    imprimir(&lista);
-    delete(&lista, 40);
-    imprimir(&lista);
-    */
+        /*unsigned char nome[] = "Mateus";
+        const long double i = -20.0000;
+        printf("Imprimindo a variavel long double : %.2f\n", (float)i, "|");
+        printf("Solucao correta :\n");
+        printf("Imprimindo a variavel long double : %.10Lf\n", i);
+        printf("Imprimindo o nome : %s", nome);
+        int a;
+        printf("Imprimindo endereco de memoria : %x\n", &a);
+        Lista lista;
+        lista.segundo = 0;
+        /*inserir(&lista, 10);
+        printf("Hello, World!\n");
+        inserir(&lista, 10);
+        imprimir(&lista);
+        delete(&lista, 10);
+        imprimir(&lista);
+        inserir(&lista, 20);
+        inserir(&lista, 40);
+        inserir(&lista, 50);
+        imprimir(&lista);
+        delete(&lista, 40);
+        imprimir(&lista);
+        */
 
-    trocarPonteiro( 1,4);
-    somaArray(4);
-    return 0;
-}
+        //trocarPonteiro( 1,4);
+        //somaArray(4);
+
+        No *lista = NULL;
+        insere(&lista,4);
+        insere(&lista,2);
+        insere(&lista,1);
+        insere(&lista,3);
+        imprimindo(lista);
+
+
+        return 0;
+    }
