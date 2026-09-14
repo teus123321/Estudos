@@ -73,7 +73,7 @@ void trocarPonteiro(int a, int b){
 
 //Soma via ponteiro — Função que recebe um array e seu tamanho, e retorna a soma percorrendo o array só com aritmética de ponteiros (sem array[i]).
 void somaArray(int tamanho) {
-    int list[tamanho];
+    int *list = (int *) malloc(tamanho * sizeof(int));
     int *lista = list;
     int soma = 0;
     for (int i = 0; i<tamanho; i++) {
@@ -81,6 +81,7 @@ void somaArray(int tamanho) {
         soma += *lista;
         printf("%d", soma);
     }
+    free(list);
 }
 
 void test() {
