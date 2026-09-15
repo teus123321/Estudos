@@ -174,6 +174,7 @@ int main(void) {
         insere(&lista,3);
         imprimindo(lista);
         inverteLista(lista);
+        free(lista);
 
 
         return 0;
