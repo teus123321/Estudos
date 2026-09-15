@@ -117,6 +117,18 @@ void insere(No **lista, int number) {
 
 }
 
+void inverteLista(No *lista) {
+    No *list = lista;
+
+    for (int i = 0; i<list->number; i++) {
+        int new = list->number;
+        list = lista->next;
+        // erro na lógica do for
+        printf("%d", list->number);
+        printf("%d", new);
+    }
+}
+
 void imprimindo(No *lista) {
 
     No *atual = lista;
@@ -161,6 +173,7 @@ int main(void) {
         insere(&lista,1);
         insere(&lista,3);
         imprimindo(lista);
+        inverteLista(lista);
 
 
         return 0;
