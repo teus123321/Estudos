@@ -16,15 +16,25 @@ class Tela(wx.Frame):
         self.CenterOnScreen()
         self.panel = wx.Panel(self)
 
+        self.texto = wx.StaticText(self.panel, wx.ID_ANY,"insira sua frase:",
+                                    pos=(40,60))
+        self.campo = wx.TextCtrl(self.panel,size=(200,25),pos=(40,80))
+        self.botao = wx.Button(self.panel, wx.ID_OK,pos=(40,120))
+        self.Bind(wx.EVT_BUTTON,self.imprime_frase)
+
         botao = wx.Button(self.panel, wx.ID_ANY, 
                         "Aperte aqui", pos=(100,100))
         self.Bind(wx.EVT_BUTTON, self.aperta, botao)
+
+    def imprime_frase(self, event):
+        if not self.campo.IsEmpty():
+            wx.MessageBox(self.campo.GetValue(), "Frase")
 
     def aperta(self, event):
         pos = self.GetPosition()
         Tela2(pos = pos).Show()
         self.hide
-        
+    
 
 
 class Tela2(wx.Frame):
