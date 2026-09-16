@@ -102,19 +102,32 @@ void test() {
     }
 }
 
-
 typedef struct No {
     int number;
     struct No *next;
 } No ;
 
-void insere(No **lista, int number) {
-    No *ptr =(No *) malloc(sizeof(No));
+typedef struct ListaInit{
+    No *inicio;
+    No *final;
+} ListaInit;
 
-    ptr->number = number;
-    ptr->next = *lista;
-    *lista = ptr;
+void criarLista(ListaInit *lista) {
+    lista->inicio = NULL;
+    lista->final = NULL;
+}
 
+void insere(ListaInit *lista, int number) {
+    No *novo = (No *) malloc(sizeof(No));
+    novo->number = number;
+    novo->next = NULL;
+    if (lista->inicio == NULL) {
+        lista->inicio = novo;
+        lista->final = novo;
+    } else {
+        lista->final->next = novo;
+        lista->final = novo;
+    }
 }
 
 void inverteLista(No *lista) {
@@ -167,14 +180,15 @@ int main(void) {
         //trocarPonteiro( 1,4);
         //somaArray(4);
 
-        No *lista = NULL;
+        ListaInit lista;
+        criarLista(&lista);
         insere(&lista,4);
         insere(&lista,2);
         insere(&lista,1);
         insere(&lista,3);
-        imprimindo(lista);
-        inverteLista(lista);
-        free(lista);
+        imprimindo(&lista);
+        //inverteLista(lista);
+        free(&lista);
 
 
         return 0;
