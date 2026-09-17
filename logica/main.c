@@ -105,28 +105,36 @@ void test() {
 typedef struct No {
     int number;
     struct No *next;
+    struct No * anterior;
 } No ;
 
 typedef struct ListaInit{
     No *inicio;
     No *final;
+    No *anterior;
 } ListaInit;
 
 void criarLista(ListaInit *lista) {
     lista->inicio = NULL;
     lista->final = NULL;
+    lista->anterior = NULL;
 }
 
 void insere(ListaInit *lista, int number) {
     No *novo = (No *) malloc(sizeof(No));
     novo->number = number;
     novo->next = NULL;
+    novo->anterior = lista->anterior;
+    lista->anterior = novo;
+
+
     if (lista->inicio == NULL) {
         lista->inicio = novo;
         lista->final = novo;
     } else {
         lista->final->next = novo;
         lista->final = novo;
+
     }
 }
 
@@ -142,9 +150,9 @@ void inverteLista(No *lista) {
     }
 }
 
-void imprimindo(No *lista) {
+void imprimindo(ListaInit *lista) {
 
-    No *atual = lista;
+    No *atual = lista->inicio;
 
     while (atual != NULL) {
         printf("%d\n", atual->number);
