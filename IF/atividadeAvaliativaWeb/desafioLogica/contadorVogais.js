@@ -1,4 +1,4 @@
-export function contadorVogais(frase) { 
+/*export function contadorVogais(frase) { 
     const vogais = ['a', 'e', 'i', 'o', 'u']
 
     let contador = 0
@@ -17,4 +17,14 @@ export function contadorVogais(frase) {
     return contador
 }
 
-console.log(contadorVogais("Mateus"))
+console.log(contadorVogais("Mateus"))*/
+
+const contador = (name) => {
+    const vogais = ['a', 'e', 'i', 'o', 'u'];
+    const nome = name.split("");
+    const aux = 0;
+    nome.forEach(nome => {
+        console.log(nome)
+    });
+}
+contador("Mateus");
