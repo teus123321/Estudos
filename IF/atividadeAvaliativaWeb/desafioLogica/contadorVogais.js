@@ -24,7 +24,11 @@ const contador = (name) => {
     const nome = name.split("");
     const aux = 0;
     nome.forEach(nome => {
-        console.log(nome)
+        for (let i = 0; i<name.length; i++) {
+            if (vogais[i] === nome){
+                console.log("k")
+            }
+        }
     });
 }
 contador("Mateus");
