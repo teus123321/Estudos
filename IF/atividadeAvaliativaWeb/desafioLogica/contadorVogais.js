@@ -22,13 +22,15 @@ console.log(contadorVogais("Mateus"))*/
 const contador = (name) => {
     const vogais = ['a', 'e', 'i', 'o', 'u'];
     const nome = name.split("");
-    const aux = 0;
+    let aux = 0;
     nome.forEach(nome => {
         for (let i = 0; i<name.length; i++) {
             if (vogais[i] === nome){
-                console.log("k")
+                console.log(vogais[i])
+                aux++
             }
         }
     });
+    console.log(aux)
 }
 contador("Mateus");
