@@ -33,4 +33,4 @@ const contador = (name) => {
     });
     console.log(aux)
 }
-contador("Mateus");
+contador("arara");
