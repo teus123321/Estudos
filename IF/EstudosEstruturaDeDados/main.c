@@ -43,14 +43,18 @@ int estaNaLista(Lista *lista,int number) {
     }
 }
 
-void trocarIndice(Lista *lista, int numberOne, int numberTwo) {
-    No *atual = lista->inicio;
+void trocarIndice(Lista *lista, int indexOne, int indexTwo) {
+    No *aux = lista->inicio;
 
-    while (atual != NULL) {
-        if (atual->number == numberOne) {
-            atual->number = numberTwo;
+    while (aux != NULL) {
+        if (aux->number == indexOne) {
+            aux->number = indexTwo;
+            indexTwo = indexOne;
         }
-        atual = atual->proximo;
+        if (aux->number == indexTwo) {
+            aux->number = indexOne;
+        }
+        aux = aux->proximo;
     }
 }
 
@@ -63,7 +67,7 @@ int main(void) {
     inserir(&lista, 4);
     printf("%d\n", estaNaLista(&lista, 6));
     imprimirLista(&lista);
-    trocarIndice(&lista,2,3);
+    trocarIndice(&lista,2,4);
     imprimirLista(&lista);
     free(&lista);
     return 0;
