@@ -22,6 +22,16 @@ void iniciarLista(Lista *lista) {
 
 }
 
+void imprimirLista(Lista *lista) {
+    No *atual = lista->inicio;
+    printf("[\n");
+    while (atual != NULL) {
+        printf("%d\n", atual->number);
+        atual = atual->proximo;
+        }
+    printf("]\n");
+    }
+
 int estaNaLista(Lista *lista,int number) {
     No *atual = lista->inicio;
 
@@ -33,6 +43,18 @@ int estaNaLista(Lista *lista,int number) {
     }
 }
 
+void trocarIndice(Lista *lista, int numberOne, int numberTwo) {
+    No *atual = lista->inicio;
+
+    while (atual != NULL) {
+        if (atual->number == numberOne) {
+            atual->number = numberTwo;
+        }
+        atual = atual->proximo;
+    }
+}
+
+
 int main(void) {
     Lista lista;
     iniciarLista(&lista);
@@ -40,6 +62,9 @@ int main(void) {
     inserir(&lista, 2);
     inserir(&lista, 4);
     printf("%d\n", estaNaLista(&lista, 6));
+    imprimirLista(&lista);
+    trocarIndice(&lista,2,3);
+    imprimirLista(&lista);
     free(&lista);
     return 0;
 }
