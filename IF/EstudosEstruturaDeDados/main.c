@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 
 typedef struct No{
     int number;
@@ -6,21 +7,39 @@ typedef struct No{
 } No;
 
 typedef struct Lista {
-    No *cabecalho;
+    No *inicio;
 } Lista;
 
 
 void iniciarLista(Lista *lista) {
-    lista->cabecalho = NULL;
+    lista->inicio = NULL;
 }
  void inserir(Lista *lista, int number) {
-    No *instanciaMemoria = (No *) sizeof(No);
-    lista->cabecalho->number = number;
-    lista->cabecalho = instanciaMemoria;
-    lista->cabecalho->proximo = NULL;
+    No *instanciaMemoria = (No *) malloc(sizeof(No));
+    instanciaMemoria->proximo = lista->inicio;
+    lista->inicio = instanciaMemoria;
+    lista->inicio->number = number;
+
+}
+
+int estaNaLista(Lista *lista,int number) {
+    No *atual = lista->inicio;
+
+    while (atual != NULL) {
+        if (atual->number == number) {
+            return 1;
+        }
+        atual = atual->proximo;
+    }
 }
 
 int main(void) {
-    printf("Olá, mundo\n");
+    Lista lista;
+    iniciarLista(&lista);
+    inserir(&lista, 1);
+    inserir(&lista, 2);
+    inserir(&lista, 4);
+    printf("%d\n", estaNaLista(&lista, 6));
+    free(&lista);
     return 0;
 }
