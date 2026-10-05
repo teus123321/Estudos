@@ -45,9 +45,11 @@ int estaNaLista(Lista *lista,int number) {
 
 void trocarIndice(Lista *lista, int indexOne, int indexTwo) {
     No *aux = lista->inicio;
-
+    
+    // Testar
+    int *i = 0;
     while (aux != NULL) {
-        if (aux->number == indexOne) {
+        if (aux->number[i] == indexOne) {
             aux->number = indexTwo;
             indexTwo = indexOne;
         }
