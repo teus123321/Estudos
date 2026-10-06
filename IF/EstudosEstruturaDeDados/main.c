@@ -32,8 +32,12 @@ int estaNoVetor(Vetor *vetor, int dados) {
     return 0;
 }
 
-int trocarIndiceVetor() {
+int trocarIndiceVetor(Vetor *vetor, size_t indexOne, size_t indexTwo) {
+    for (int i = 0; i<max; i++) {
+        if (vetor->dados[i] == indexOne) {
 
+        }
+    }
 }
 
 /*
