@@ -1,6 +1,28 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+
+const int max = 1000;
+
+typedef struct Vetor {
+    int dados[max];
+}Vetor;
+
+void iniciaVetor(Vetor *vetor) {
+    for (size_t i = 0; i<max; i++) {
+        vetor->dados[i] = 0;
+    }
+}
+
+int inserirDadosVetor(Vetor *vetor, size_t indice, int dados) {
+    if (indice >= max) {
+        return 0;
+    }
+    vetor->dados[indice] = dados;
+    return 1;
+}
+
+/*
 typedef struct No{
     int number;
     struct No *proximo;
@@ -45,7 +67,7 @@ int estaNaLista(Lista *lista,int number) {
 
 void trocarIndice(Lista *lista, int indexOne, int indexTwo) {
     No *aux = lista->inicio;
-    
+
     // Testar
     int *i = 0;
     while (aux != NULL) {
@@ -59,9 +81,10 @@ void trocarIndice(Lista *lista, int indexOne, int indexTwo) {
         aux = aux->proximo;
     }
 }
-
+*/
 
 int main(void) {
+    /*
     Lista lista;
     iniciarLista(&lista);
     inserir(&lista, 1);
@@ -72,5 +95,6 @@ int main(void) {
     trocarIndice(&lista,2,4);
     imprimirLista(&lista);
     free(&lista);
+    */
     return 0;
 }
