@@ -22,6 +22,17 @@ int inserirDadosVetor(Vetor *vetor, size_t indice, int dados) {
     return 1;
 }
 
+int estaNoVetor(Vetor *vetor, int dados) {
+    int aux = 0;
+    while (aux < max){}
+
+    for (int i = 0; i <max; i++) {
+        if (vetor ->dados[i] == dados) {
+            return 1;
+        }
+    }
+}
+
 /*
 typedef struct No{
     int number;
