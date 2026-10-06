@@ -2,8 +2,9 @@
 #include <stdlib.h>
 
 
-#define max 1000
 
+//vetor
+#define max 1000
 typedef struct Vetor {
     int dados[max];
 }Vetor;
@@ -31,7 +32,13 @@ int estaNoVetor(Vetor *vetor, int dados) {
     return 0;
 }
 
+int trocarIndiceVetor() {
+
+}
+
 /*
+
+//lista encadeada
 typedef struct No{
     int number;
     struct No *proximo;
