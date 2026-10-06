@@ -2,7 +2,7 @@
 #include <stdlib.h>
 
 
-const int max = 1000;
+#define max 1000
 
 typedef struct Vetor {
     int dados[max];
@@ -23,14 +23,12 @@ int inserirDadosVetor(Vetor *vetor, size_t indice, int dados) {
 }
 
 int estaNoVetor(Vetor *vetor, int dados) {
-    int aux = 0;
-    while (aux < max){}
-
     for (int i = 0; i <max; i++) {
         if (vetor ->dados[i] == dados) {
             return 1;
         }
     }
+    return 0;
 }
 
 /*
@@ -107,5 +105,9 @@ int main(void) {
     imprimirLista(&lista);
     free(&lista);
     */
+    Vetor vetor;
+    iniciaVetor(&vetor);
+    printf("%d\n",inserirDadosVetor(&vetor, 0, 1));
+    printf("%d\n",estaNoVetor(&vetor, 1));
     return 0;
 }
