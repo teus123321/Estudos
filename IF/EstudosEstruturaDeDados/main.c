@@ -4,7 +4,7 @@
 
 
 //vetor
-#define max 1000
+#define max 100
 typedef struct Vetor {
     int dados[max];
 }Vetor;
@@ -34,12 +34,35 @@ int estaNoVetor(Vetor *vetor, int dados) {
 
 int trocarIndiceVetor(Vetor *vetor, size_t indexOne, size_t indexTwo) {
     for (int i = 0; i<max; i++) {
-        if (vetor->dados[i] == indexOne) {
-
+        if (vetor->dados[i] == vetor->dados[indexOne]) {
+            vetor->dados[i] = vetor->dados[indexTwo];
+            return 1;
         }
+        return 0;
     }
 }
 
+void imprimirVetor(Vetor *vetor){
+    for(int i = 0; i<max; i++){
+        printf("%d", vetor->dados[i]);
+    }
+}
+
+
+
+/*
+int trocarIndiceVetor(Vetor *vetor, size_t indexOne, size_t indexTwo) {
+    int i = 0;
+    while(i < max){
+        if(vetor->dados[i] == indexOne){
+            vetor->dados[i] = indexOne;
+            if(vetor->dados[i] == indexTwo){
+                vetor
+            }
+        }
+    }
+}
+*/
 /*
 
 //lista encadeada
@@ -119,6 +142,10 @@ int main(void) {
     Vetor vetor;
     iniciaVetor(&vetor);
     printf("%d\n",inserirDadosVetor(&vetor, 0, 1));
+    printf("%d\n",inserirDadosVetor(&vetor, 1, 2));
     printf("%d\n",estaNoVetor(&vetor, 1));
+    printf("%d\n",estaNoVetor(&vetor, 2));
+    printf("%d\n",trocarIndiceVetor(&vetor, 0, 1));
+    imprimirVetor(&vetor);
     return 0;
 }
