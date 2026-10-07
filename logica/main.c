@@ -1,203 +1,157 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define valorMaximo 100;
 
 /*
-Troca por ponteiro — Escreva void troca(int *a, int *b) que troca o valor de duas variáveis.
+//vetor
+#define max 100
+typedef struct Vetor {
+    int dados[max];
+}Vetor;
 
-Soma via ponteiro — Função que recebe um array e seu tamanho, e retorna a soma percorrendo o array só com aritmética de ponteiros (sem array[i]).
+void iniciaVetor(Vetor *vetor) {
+    for (size_t i = 0; i<max; i++) {
+        vetor->dados[i] = 0;
+    }
+}
 
-Maior e menor — Função void min_max(int *v, int n, int *menor, int *maior) que preenche os ponteiros menor e maior com os valores extremos do array.
+int inserirDadosVetor(Vetor *vetor, size_t indice, int dados) {
+    if (indice >= max) {
+        return 0;
+    }
+    vetor->dados[indice] = dados;
+    return 1;
+}
 
-Inverter array in-place — Função que inverte um array usando dois ponteiros (um no início, outro no fim) que se movem um em direção ao outro.
+int estaNoVetor(Vetor *vetor, int dados) {
+    for (int i = 0; i <max; i++) {
+        if (vetor ->dados[i] == dados) {
+            return 1;
+        }
+    }
+    return 0;
+}
 
-Strlen manual — Implemente sua própria int minha_strlen(char *s) usando ponteiro (sem usar string.h).
+int trocarIndiceVetor(Vetor *vetor, size_t indexOne, size_t indexTwo) {
+    for (int i = 0; i<max; i++) {
+        if (vetor->dados[i] == vetor->dados[indexOne]) {
+            vetor->dados[i] = vetor->dados[indexTwo];
+            return 1;
+        }
+        return 0;
+    }
+}
 
-Strcpy manual — Implemente void minha_strcpy(char *dest, char *src).
+void imprimirVetor(Vetor *vetor){
+    for(int i = 0; i<max; i++){
+        printf("%d", vetor->dados[i]);
+    }
+}
 
-Contar vogais com ponteiro — Função que recebe char *s e retorna quantas vogais tem, andando o ponteiro com s++.
-
-Alocação dinâmica — Peça um número n ao usuário, aloque um array de n inteiros com malloc, preencha, some e depois dê free.
-
-Ponteiro para ponteiro — Escreva uma função que recebe int **matriz, int linhas, int colunas (matriz alocada dinamicamente) e imprime todos os valores.
-
-Lista ligada simples — Crie uma struct No { int valor; struct No *prox; }, e escreva uma função inserir_fim que adiciona um nó no final de uma lista ligada.
-
+int trocarIndiceVetor(Vetor *vetor, size_t indexOne, size_t indexTwo) {
+    int i = 0;
+    while(i < max){
+        if(vetor->dados[i] == indexOne){
+            vetor->dados[i] = indexOne;
+            if(vetor->dados[i] == indexTwo){
+                vetor
+            }
+        }
+    }
+}
 */
 
 
+//lista encadeada
+typedef struct No{
+    int number;
+    struct No *proximo;
+} No;
 
-#define MAX 100
-
-typedef struct  {
-    int primeiro[MAX];
-    int segundo;
+typedef struct Lista {
+    No *inicio;
 } Lista;
 
-void inserir(Lista *lista, int number){
-    if(lista->segundo < MAX) {
-        lista->primeiro[lista->segundo] = number;
-        lista->segundo++;
-    };
-};
 
-void delete(Lista *lista, int number){
-    for (int i = 0; i<lista->segundo; i++) {
-        if (number == lista->primeiro[i]){
-            for (int j = i; j<lista->segundo - 1; j++) {
-                lista->primeiro[j] = lista->primeiro[j + 1];
-        }
-        lista->segundo--;
-        break;
-        }
-    }
-  }
-
-
-void imprimir(Lista *lista) {
-    for (int i = 0; i<lista->segundo; i++) {
-        printf("%d\n", lista->primeiro[i]);
-    };
-};
-
-//Troca por ponteiro — Escreva void troca(int *a, int *b) que troca o valor de duas variáveis.
-void trocarPonteiro(int a, int b){
-    int *aux = &a;
-    int *auxTwo = &b;
-    int *temp = aux;
-    aux = auxTwo;
-    auxTwo = temp;
-    printf("%d, %d\n", *aux,*auxTwo);
-}
-
-//Soma via ponteiro — Função que recebe um array e seu tamanho, e retorna a soma percorrendo o array só com aritmética de ponteiros (sem array[i]).
-void somaArray(int tamanho) {
-    int *list = (int *) malloc(tamanho * sizeof(int));
-    int *lista = list;
-    int soma = 0;
-    for (int i = 0; i<tamanho; i++) {
-        *lista = i;
-        soma += *lista;
-        printf("%d", soma);
-    }
-    free(list);
-}
-
-void test() {
-    int n = 5;
-    int *ptr;
-    ptr = (int *) malloc((n * sizeof(int)));
-
-    if (ptr != NULL) {
-        printf("Malloc alocado. Alocacaoo de memoria dinanica efetuada\n");
-
-        for (int i = 0; i < n; i++) {
-            ptr[i] = i;
-        }
-
-        for (int j = 0; j < n; j++){
-            printf("%d", ptr[j]);
-        }
-    }
-}
-
-typedef struct No {
-    int number;
-    struct No *next;
-    struct No * anterior;
-} No ;
-
-typedef struct ListaInit{
-    No *inicio;
-    No *final;
-    No *anterior;
-} ListaInit;
-
-void criarLista(ListaInit *lista) {
+void iniciarLista(Lista *lista) {
     lista->inicio = NULL;
-    lista->final = NULL;
-    lista->anterior = NULL;
+}
+ void inserir(Lista *lista, int number) {
+    No *instanciaMemoria = (No *) malloc(sizeof(No));
+    instanciaMemoria->proximo = lista->inicio;
+    lista->inicio = instanciaMemoria;
+    lista->inicio->number = number;
+
 }
 
-void insere(ListaInit *lista, int number) {
-    No *novo = (No *) malloc(sizeof(No));
-    novo->number = number;
-    novo->next = NULL;
-    novo->anterior = lista->anterior;
-    lista->anterior = novo;
-
-
-    if (lista->inicio == NULL) {
-        lista->inicio = novo;
-        lista->final = novo;
-    } else {
-        lista->final->next = novo;
-        lista->final = novo;
-
+void imprimirLista(Lista *lista) {
+    No *atual = lista->inicio;
+    printf("[");
+    while (atual != NULL) {
+        printf("%d", atual->number);
+        atual = atual->proximo;
+        }
+    printf("]\n");
     }
-}
 
-void inverteLista(No *lista) {
-    No *list = lista;
-
-    for (int i = 0; i<list->number; i++) {
-        int new = list->number;
-        list = lista->next;
-        // erro na lógica do for
-        printf("%d", list->number);
-        printf("%d", new);
-    }
-}
-
-void imprimindo(ListaInit *lista) {
-
+int estaNaLista(Lista *lista,int number) {
     No *atual = lista->inicio;
 
     while (atual != NULL) {
-        printf("%d\n", atual->number);
-        atual = atual->next;
+        if (atual->number == number) {
+            return 1;
+        }
+        atual = atual->proximo;
     }
+    return 0;
 }
 
+void trocarIndice(Lista *lista, int indexOne, int indexTwo) {
+    No *aux = lista->inicio;
+    No *auxOne = NULL;
+    No *auxTwo = NULL;
+
+    int i = 0;
+    while (aux != NULL) {
+        if (i == indexOne) {
+            auxOne = aux;
+        }
+        if (indexTwo = indexTwo) {
+            auxTwo = aux;
+        }
+        aux = aux->proximo;
+        i++;
+
+        if (auxOne != NULL && auxTwo != NULL) {
+            int temporario = auxOne->number;
+            auxOne->number = auxTwo->number;
+            auxTwo->number = temporario;
+        }
+    };
+}
+
+
 int main(void) {
-        /*unsigned char nome[] = "Mateus";
-        const long double i = -20.0000;
-        printf("Imprimindo a variavel long double : %.2f\n", (float)i, "|");
-        printf("Solucao correta :\n");
-        printf("Imprimindo a variavel long double : %.10Lf\n", i);
-        printf("Imprimindo o nome : %s", nome);
-        int a;
-        printf("Imprimindo endereco de memoria : %x\n", &a);
-        Lista lista;
-        lista.segundo = 0;
-        /*inserir(&lista, 10);
-        printf("Hello, World!\n");
-        inserir(&lista, 10);
-        imprimir(&lista);
-        delete(&lista, 10);
-        imprimir(&lista);
-        inserir(&lista, 20);
-        inserir(&lista, 40);
-        inserir(&lista, 50);
-        imprimir(&lista);
-        delete(&lista, 40);
-        imprimir(&lista);
-        */
 
-        //trocarPonteiro( 1,4);
-        //somaArray(4);
-
-        ListaInit lista;
-        criarLista(&lista);
-        insere(&lista,4);
-        insere(&lista,2);
-        insere(&lista,1);
-        insere(&lista,3);
-        imprimindo(&lista);
-        //inverteLista(lista);
-        free(&lista);
-
-
-        return 0;
-    }
+    Lista lista;
+    iniciarLista(&lista);
+    inserir(&lista, 1);
+    inserir(&lista, 2);
+    inserir(&lista, 4);
+    printf("%d\n", estaNaLista(&lista, 6));
+    imprimirLista(&lista);
+    trocarIndice(&lista,1,2);
+    imprimirLista(&lista);
+    free(&lista);
+    /*
+    Vetor vetor;
+    iniciaVetor(&vetor);
+    printf("%d\n",inserirDadosVetor(&vetor, 0, 1));
+    printf("%d\n",inserirDadosVetor(&vetor, 1, 2));
+    printf("%d\n",estaNoVetor(&vetor, 1));
+    printf("%d\n",estaNoVetor(&vetor, 2));
+    printf("%d\n",trocarIndiceVetor(&vetor, 0, 1));
+    imprimirVetor(&vetor);
+    */
+    return 0;
+}
