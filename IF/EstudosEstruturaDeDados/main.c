@@ -2,7 +2,7 @@
 #include <stdlib.h>
 
 
-
+/*
 //vetor
 #define max 100
 typedef struct Vetor {
@@ -48,9 +48,6 @@ void imprimirVetor(Vetor *vetor){
     }
 }
 
-
-
-/*
 int trocarIndiceVetor(Vetor *vetor, size_t indexOne, size_t indexTwo) {
     int i = 0;
     while(i < max){
@@ -63,7 +60,7 @@ int trocarIndiceVetor(Vetor *vetor, size_t indexOne, size_t indexTwo) {
     }
 }
 */
-/*
+
 
 //lista encadeada
 typedef struct No{
@@ -89,9 +86,9 @@ void iniciarLista(Lista *lista) {
 
 void imprimirLista(Lista *lista) {
     No *atual = lista->inicio;
-    printf("[\n");
+    printf("[");
     while (atual != NULL) {
-        printf("%d\n", atual->number);
+        printf("%d", atual->number);
         atual = atual->proximo;
         }
     printf("]\n");
@@ -106,39 +103,47 @@ int estaNaLista(Lista *lista,int number) {
         }
         atual = atual->proximo;
     }
+    return 0;
 }
 
 void trocarIndice(Lista *lista, int indexOne, int indexTwo) {
     No *aux = lista->inicio;
+    No *auxOne = NULL;
+    No *auxTwo = NULL;
 
-    // Testar
-    int *i = 0;
+    int i = 0;
     while (aux != NULL) {
-        if (aux->number[i] == indexOne) {
-            aux->number = indexTwo;
-            indexTwo = indexOne;
+        if (i == indexOne) {
+            auxOne = aux;
         }
-        if (aux->number == indexTwo) {
-            aux->number = indexOne;
+        if (indexTwo = indexTwo) {
+            auxTwo = aux;
         }
         aux = aux->proximo;
-    }
+        i++;
+
+        if (auxOne != NULL && auxTwo != NULL) {
+            int temporario = auxOne->number;
+            auxOne->number = auxTwo->number;
+            auxTwo->number = temporario;
+        }
+    };
 }
-*/
+
 
 int main(void) {
-    /*
+
     Lista lista;
     iniciarLista(&lista);
     inserir(&lista, 1);
     inserir(&lista, 2);
     inserir(&lista, 4);
-    printf("%d\n", estaNaLista(&lista, 6));
+    printf("%d\n", estaNaLista(&lista, 2));
     imprimirLista(&lista);
-    trocarIndice(&lista,2,4);
+    trocarIndice(&lista,1,2);
     imprimirLista(&lista);
     free(&lista);
-    */
+    /*
     Vetor vetor;
     iniciaVetor(&vetor);
     printf("%d\n",inserirDadosVetor(&vetor, 0, 1));
@@ -147,5 +152,6 @@ int main(void) {
     printf("%d\n",estaNoVetor(&vetor, 2));
     printf("%d\n",trocarIndiceVetor(&vetor, 0, 1));
     imprimirVetor(&vetor);
+    */
     return 0;
 }
