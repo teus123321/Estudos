@@ -130,6 +130,20 @@ void trocarIndice(Lista *lista, int indexOne, int indexTwo) {
     };
 }
 
+void inverterFila(Lista *lista) {
+    No *anterior = NULL;
+    No *atual = lista->inicio;
+    No *proximo = NULL;
+
+
+    while (atual != NULL) {
+        proximo = atual->proximo;
+        atual->proximo = anterior;
+        anterior = atual;
+        atual = proximo;
+    }
+    lista->inicio = anterior;
+}
 
 int main(void) {
 
@@ -141,6 +155,8 @@ int main(void) {
     printf("%d\n", estaNaLista(&lista, 2));
     imprimirLista(&lista);
     trocarIndice(&lista,1,2);
+    imprimirLista(&lista);
+    inverterFila(&lista);
     imprimirLista(&lista);
     free(&lista);
     /*
