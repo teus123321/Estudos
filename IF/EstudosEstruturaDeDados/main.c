@@ -111,8 +111,8 @@ void inserirNaFila(Fila *fila, int number){
 }
 
 void desenfileirar(Fila *fila){
-    No *atual = fila->inicio->proximo;
-    fila->inicio->proximo = atual->proximo;
+    No *atual = fila->inicio;
+    fila->inicio = atual->proximo;
     free(atual);
 }
 
