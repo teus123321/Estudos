@@ -89,17 +89,25 @@ void inverterFila(Lista *lista) {
 
 typedef struct Fila {
     No *inicio;
+    No *fim;
 }Fila;
 
 void iniciarFila(Fila *fila){
     fila->inicio = NULL;
+    fila->fim = NULL;
 }
 
 void inserirNaFila(Fila *fila, int number){
     No *instanciaMemoria = (No *) malloc(sizeof(No));
-    instanciaMemoria->proximo = fila->inicio;
-    fila->inicio = instanciaMemoria;
-    fila->inicio->number = number;
+    instanciaMemoria->number = number;
+    instanciaMemoria->proximo = NULL;
+
+    if (fila->fim == NULL) {
+        fila->inicio = instanciaMemoria;
+    } else {
+        fila->fim->proximo = instanciaMemoria;
+    }
+    fila->fim = instanciaMemoria;
 }
 
 void desenfileirar(Fila *fila){
@@ -109,7 +117,7 @@ void desenfileirar(Fila *fila){
 }
 
 void imprimirFila(Fila *fila){
-    struct No *atual = fila->inicio->proximo;
+    No *atual = fila->inicio;
     printf("[");
     while(atual != NULL){
         printf("%d,",atual->number);
@@ -146,7 +154,7 @@ void imprimirPilha(Pilha *pilha){
     printf("[");
     while(atual != NULL){
         printf("%d,",atual->number);
-        atual = atual->;
+        atual = atual->proximo;
     }
     printf("]\n");
 }
