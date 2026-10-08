@@ -2,66 +2,6 @@
 #include <stdlib.h>
 
 
-/*
-//vetor
-#define max 100
-typedef struct Vetor {
-    int dados[max];
-}Vetor;
-
-void iniciaVetor(Vetor *vetor) {
-    for (size_t i = 0; i<max; i++) {
-        vetor->dados[i] = 0;
-    }
-}
-
-int inserirDadosVetor(Vetor *vetor, size_t indice, int dados) {
-    if (indice >= max) {
-        return 0;
-    }
-    vetor->dados[indice] = dados;
-    return 1;
-}
-
-int estaNoVetor(Vetor *vetor, int dados) {
-    for (int i = 0; i <max; i++) {
-        if (vetor ->dados[i] == dados) {
-            return 1;
-        }
-    }
-    return 0;
-}
-
-int trocarIndiceVetor(Vetor *vetor, size_t indexOne, size_t indexTwo) {
-    for (int i = 0; i<max; i++) {
-        if (vetor->dados[i] == vetor->dados[indexOne]) {
-            vetor->dados[i] = vetor->dados[indexTwo];
-            return 1;
-        }
-        return 0;
-    }
-}
-
-void imprimirVetor(Vetor *vetor){
-    for(int i = 0; i<max; i++){
-        printf("%d", vetor->dados[i]);
-    }
-}
-
-int trocarIndiceVetor(Vetor *vetor, size_t indexOne, size_t indexTwo) {
-    int i = 0;
-    while(i < max){
-        if(vetor->dados[i] == indexOne){
-            vetor->dados[i] = indexOne;
-            if(vetor->dados[i] == indexTwo){
-                vetor
-            }
-        }
-    }
-}
-*/
-
-
 //lista encadeada
 typedef struct No{
     int number;
@@ -76,7 +16,7 @@ typedef struct Lista {
 void iniciarLista(Lista *lista) {
     lista->inicio = NULL;
 }
- void inserir(Lista *lista, int number) {
+void inserir(Lista *lista, int number) {
     No *instanciaMemoria = (No *) malloc(sizeof(No));
     instanciaMemoria->proximo = lista->inicio;
     lista->inicio = instanciaMemoria;
@@ -90,9 +30,9 @@ void imprimirLista(Lista *lista) {
     while (atual != NULL) {
         printf("%d", atual->number);
         atual = atual->proximo;
-        }
-    printf("]\n");
     }
+    printf("]\n");
+}
 
 int estaNaLista(Lista *lista,int number) {
     No *atual = lista->inicio;
@@ -145,8 +85,77 @@ void inverterFila(Lista *lista) {
     lista->inicio = anterior;
 }
 
+//fila
+
+typedef struct Fila {
+    No *inicio;
+}Fila;
+
+void iniciarFila(Fila *fila){
+    fila->inicio = NULL;
+}
+
+void inserirNaFila(Fila *fila, int number){
+    No *instanciaMemoria = (No *) malloc(sizeof(No));
+    instanciaMemoria->proximo = fila->inicio;
+    fila->inicio = instanciaMemoria;
+    fila->inicio->number = number;
+}
+
+void desenfileirar(Fila *fila){
+    No *atual = fila->inicio->proximo;
+    fila->inicio->proximo = atual->proximo;
+    free(atual);
+}
+
+void imprimirFila(Fila *fila){
+    struct No *atual = fila->inicio->proximo;
+    printf("[");
+    while(atual != NULL){
+        printf("%d,",atual->number);
+        atual = atual->proximo;
+    }
+    printf("]\n");
+}
+
+
+//pilha
+typedef struct Pilha {
+    No *inicio;
+    No *fim;
+}Pilha;
+
+void iniciarPilha(Pilha *pilha){
+    pilha->inicio = NULL;
+    pilha->fim = NULL;
+}
+
+void inserirNaPilha(Pilha *pilha, int number){
+    No *instanciaMemoria = (No *) malloc(sizeof(No));
+    instanciaMemoria->proximo = pilha->inicio;
+    pilha->inicio = instanciaMemoria;
+    pilha->inicio->number = number;
+}
+
+void desempilhar(Pilha *pilha){
+
+}
+
+void imprimirPilha(Pilha *pilha){
+    No *atual = pilha->inicio;
+    printf("[");
+    while(atual != NULL){
+        printf("%d,",atual->number);
+        atual = atual->;
+    }
+    printf("]\n");
+}
+
+
 int main(void) {
 
+    /*
+    //lista
     Lista lista;
     iniciarLista(&lista);
     inserir(&lista, 1);
@@ -159,15 +168,20 @@ int main(void) {
     inverterFila(&lista);
     imprimirLista(&lista);
     free(&lista);
-    /*
-    Vetor vetor;
-    iniciaVetor(&vetor);
-    printf("%d\n",inserirDadosVetor(&vetor, 0, 1));
-    printf("%d\n",inserirDadosVetor(&vetor, 1, 2));
-    printf("%d\n",estaNoVetor(&vetor, 1));
-    printf("%d\n",estaNoVetor(&vetor, 2));
-    printf("%d\n",trocarIndiceVetor(&vetor, 0, 1));
-    imprimirVetor(&vetor);
     */
+    printf("Fila :\n");
+    Fila fila;
+    iniciarFila(&fila);
+    inserirNaFila(&fila, 1);
+    inserirNaFila(&fila, 2);
+    imprimirFila(&fila);
+    desenfileirar(&fila);
+    imprimirFila(&fila);
+    printf("Pilha :\n");
+    Pilha pilha;
+    iniciarPilha(&pilha);
+    inserirNaPilha(&pilha, 1);
+    inserirNaPilha(&pilha, 2);
+    imprimirPilha(&pilha);
     return 0;
 }
