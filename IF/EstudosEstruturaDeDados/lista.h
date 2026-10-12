@@ -1,6 +1,5 @@
 #ifndef UNTITLED1_LISTA_H
 #define UNTITLED1_LISTA_H
-#endif //UNTITLED1_LISTA_H
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -12,17 +11,26 @@ typedef struct No{
 
 typedef struct Lista {
     No *inicio;
+    No *fim;
 } Lista;
 
 
 void iniciarLista(Lista *lista) {
     lista->inicio = NULL;
+    lista->fim = NULL;
 }
 void inserir(Lista *lista, int number) {
     No *instanciaMemoria = (No *) malloc(sizeof(No));
     instanciaMemoria->proximo = lista->inicio;
-    lista->inicio = instanciaMemoria;
-    lista->inicio->number = number;
+    instanciaMemoria->number = number;
+    instanciaMemoria->proximo = NULL;
+
+    if (lista->fim == NULL) {
+        lista->inicio = instanciaMemoria;
+    } else {
+        lista->fim->proximo = instanciaMemoria;
+    }
+    lista->fim = instanciaMemoria;
 
 }
 
@@ -30,7 +38,7 @@ void imprimirLista(Lista *lista) {
     No *atual = lista->inicio;
     printf("[");
     while (atual != NULL) {
-        printf("%d", atual->number);
+        printf("%d ", atual->number);
         atual = atual->proximo;
     }
     printf("]\n");
@@ -86,3 +94,5 @@ void inverterFila(Lista *lista) {
     }
     lista->inicio = anterior;
 }
+
+#endif //UNTITLED1_LISTA_H
