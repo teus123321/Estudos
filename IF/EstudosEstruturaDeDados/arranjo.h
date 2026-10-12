@@ -32,7 +32,7 @@ void inserirArranjo(Arranjo *arranjo, int number) {
     if (arranjo->tamanho >= MAX) {
         return;
     }
-    for (int i = arranjo->tamanho; i >= 0; i--) {
+    for (int i = arranjo->tamanho; i > 0; i--) {
         arranjo->number[i] = arranjo->number[i - 1];
     }
     arranjo->number[0] = number;
