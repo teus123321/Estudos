@@ -21,7 +21,6 @@ void iniciarLista(Lista *lista) {
 }
 void inserir(Lista *lista, int number) {
     No *instanciaMemoria = (No *) malloc(sizeof(No));
-    instanciaMemoria->proximo = lista->inicio;
     instanciaMemoria->number = number;
     instanciaMemoria->proximo = NULL;
 
@@ -31,7 +30,6 @@ void inserir(Lista *lista, int number) {
         lista->fim->proximo = instanciaMemoria;
     }
     lista->fim = instanciaMemoria;
-
 }
 
 void imprimirLista(Lista *lista) {
