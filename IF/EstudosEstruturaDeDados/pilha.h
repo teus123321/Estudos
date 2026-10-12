@@ -1,6 +1,5 @@
 #ifndef UNTITLED1_PILHA_H
 #define UNTITLED1_PILHA_H
-#endif //UNTITLED1_PILHA_H
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -29,7 +28,9 @@ void inserirNaPilha(Pilha *pilha, int number){
 }
 
 void desempilhar(Pilha *pilha){
-
+    NoPilha *atual = pilha->inicio;
+    pilha->inicio = atual->proximo;
+    free(atual);
 }
 
 void imprimirPilha(Pilha *pilha){
@@ -41,3 +42,4 @@ void imprimirPilha(Pilha *pilha){
     }
     printf("]\n");
 }
+#endif //UNTITLED1_PILHA_H
