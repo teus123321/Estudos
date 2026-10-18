@@ -1,0 +1,12 @@
+# Executáveis e arquivos compilados
+*.exe
+*.o
+*.obj
+*.out
+
+# Arquivos de depuração
+*.pdb
+
+# Arquivos temporários
+*.log
+*.tmp

@@ -1,8 +1,9 @@
-#ifndef UNTITLED1_FILA_H
-#define UNTITLED1_FILA_H
-#endif //UNTITLED1_FILA_H
+#ifndef FILA_H
+#define FILA_H
+
 #include <stdio.h>
 #include <stdlib.h>
+
 
 typedef struct NoFila{
     int number;
@@ -47,3 +48,5 @@ void imprimirFila(Fila *fila){
     }
     printf("]\n");
 }
+
+#endif //UNTITLED1_FILA_H
