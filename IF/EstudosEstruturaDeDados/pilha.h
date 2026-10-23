@@ -22,14 +22,32 @@ void iniciarPilha(Pilha *pilha){
 
 void inserirNaPilha(Pilha *pilha, int number){
     NoPilha *instanciaMemoria = (NoPilha *) malloc(sizeof(NoPilha));
-    instanciaMemoria->proximo = pilha->inicio;
-    pilha->inicio = instanciaMemoria;
-    pilha->inicio->number = number;
+    instanciaMemoria->number = number;
+    instanciaMemoria->proximo = NULL;
+    if(pilha->fim == NULL){
+        pilha->inicio = instanciaMemoria;
+    } else {
+        pilha->fim->proximo = instanciaMemoria;
+    }
+    pilha->fim = instanciaMemoria;
 }
 
 void desempilhar(Pilha *pilha){
     NoPilha *atual = pilha->inicio;
-    pilha->inicio = atual->proximo;
+    NoPilha *anterior = NULL;
+    if(atual == NULL){
+        return;
+    }
+    while(atual->proximo != NULL){
+        anterior = atual;
+        atual = atual->proximo;
+    }
+    if(anterior == NULL){
+        pilha->inicio = NULL;
+    } else {
+        anterior->proximo = NULL;
+    }
+    pilha->fim = anterior;
     free(atual);
 }
 
