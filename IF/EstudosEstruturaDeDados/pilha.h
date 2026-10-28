@@ -33,22 +33,25 @@ void inserirNaPilha(Pilha *pilha, int number){
 }
 
 void desempilhar(Pilha *pilha){
-    NoPilha *atual = pilha->inicio;
-    NoPilha *anterior = NULL;
-    if(atual == NULL){
+    if(pilha == NULL) {
+        printf("Pilha vazia");
+    };
+    NoPilha *aux = pilha->inicio;
+
+    if(aux == pilha->fim){
+        free(pilha->fim);
+        pilha->inicio = NULL;
+        pilha->fim = NULL;
         return;
     }
-    while(atual->proximo != NULL){
-        anterior = atual;
-        atual = atual->proximo;
+
+    while(aux->proximo != pilha->fim){
+        aux = aux->proximo;
     }
-    if(anterior == NULL){
-        pilha->inicio = NULL;
-    } else {
-        anterior->proximo = NULL;
-    }
-    pilha->fim = anterior;
-    free(atual);
+
+    free(pilha->fim);
+    pilha->fim = aux;
+    pilha->fim->proximo = NULL;
 }
 
 void imprimirPilha(Pilha *pilha){
