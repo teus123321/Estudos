@@ -5,9 +5,6 @@ const dados = [{
     id : 1, nome : "black myth wokong"
 }]
 
-
-
-
 app.get("/itens", (req, res) => {
     res.send(dados).json();
 })
