@@ -1,14 +1,24 @@
-async function buscarDados(dd){
-    url = `https://brasilapi.com.br/api/ddd/v1/${dd}`;
-    Resposta = await fetch(url);
-    dados = await Resposta.json();
-    estado = dados.state;
-    cidades = dados.cities;
-    console.log(`O estado é : ${estado}.`);
-    console.log("As cidades são : ");
-    for (i = 1; i < cidades.length; i++){
-        console.log(i, cidades[i])
-    }
-}
+const express = require('express');
+const app = express();
 
-buscarDados(65)
+const dados = [{
+    id : 1, nome : "black myth wokong"
+}]
+
+
+
+
+app.get("/itens", (req, res) => {
+    res.send(dados).json();
+})
+
+app.get("/itens/:id", (res, req) => {
+    res.status(404).json({ "erro": "Item não encontrado" });
+})
+
+app.delete("/itens/:id", (res, req) => {
+    res.status(204).send();
+    // 404 se o id não existir 
+})
+
+app.listen(3000, () => console.log("Servidor rodando na porta 3000"));
