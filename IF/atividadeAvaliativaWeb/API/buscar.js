@@ -9,8 +9,8 @@ let dados = [
     {id : "4", nome : "Free Fire"},
 ]
 
-app.get("/itens", (req, res) => {
-    res.send(dados).json();
+app.get("/", (req, res) => {
+    res.json(dados);
 })
 
 app.get("/itens/:id", (req, res) => {
@@ -24,9 +24,22 @@ app.get("/itens/:id", (req, res) => {
 
 
 app.delete("/itens/delete/:id", (req, res) => {
-    const {id} = req.params
-    dados = dados.filter((item) => item.id !== id)
-    res.status(200).json({ mensagem: 'Item removido com sucesso!', dados });
-})
+    const { id } = req.params;
+
+    const encontrado = dados.find(item => item.id === id);
+
+    if (!encontrado) {
+        return res.status(404).json({
+            erro: "Item não encontrado"
+        });
+    }
+
+    dados = dados.filter(item => item.id !== id);
+
+    res.status(200).json({
+        mensagem: "Item removido com sucesso!",
+        dados
+    });
+});
 
 app.listen(3000, () => console.log("Servidor rodando na porta 3000"));
