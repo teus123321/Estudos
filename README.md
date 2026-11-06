@@ -1,19 +1,11 @@
-# Estudos — IFMT
+# Estudos
 
-Repositório com exercícios, atividades e projetos que desenvolvo durante o bacharelado em Sistemas de Informação no IFMT.
+Meu espaço para guardar as atividades de Sistemas de Informação no IFMT e o que estudo por conta própria. Aqui ficam tanto os primeiros exercícios quanto os projetos que vou retomando ao longo do curso.
 
-Uso este espaço para guardar o que faço nas disciplinas, revisar os conteúdos e acompanhar minha evolução na programação.
+| Onde encontrar | O que tem lá |
+| --- | --- |
+| [IFMT](ifmt/) | Atividades da faculdade, separadas por assunto |
+| [Lógica](logica/) | Exercícios avulsos em C e JavaScript |
+| [Aprendizado de máquina](aprendizado-de-maquina/) | Roteiro e prática com classificação de dígitos |
 
-## Conteúdo
-
-Os arquivos incluem atividades de aula, trabalhos e exercícios que faço para praticar e entender melhor os assuntos do curso.
-
-Alguns códigos são simples e outros ainda podem receber ajustes. A ideia é manter um registro do aprendizado, incluindo as dificuldades e as soluções encontradas ao longo do caminho.
-
-## Como executar
-
-Para testar algum programa, baixe o repositório e abra a pasta da atividade. A execução depende da linguagem utilizada, e alguns projetos podem precisar de bibliotecas ou configurações específicas.
-
-## Observação
-
-Este repositório tem finalidade acadêmica e de estudo. Os códigos representam o que estou aprendendo em cada etapa do curso.
+Para testar um exercício, abra a pasta dele. Os projetos de login em Python têm instruções próprias para instalação e execução.
