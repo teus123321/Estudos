@@ -22,3 +22,4 @@ Para aproximar a prática do OCR de chassi e motor, registre a diferença entre 
 ## Laboratórios do Coursera
 
 - **Curso 1 · Semana 1 · Lab 02:** [Representação do modelo de regressão linear](coursera/curso-1/semana-1/lab-02-representacao-modelo/README.md) — notebook original e explicação completa em português.
+- **Curso 1 · Semana 1 · Aula:** [Função de custo e intuição da regressão linear](coursera/curso-1/semana-1/aula-funcao-de-custo/README.md) — 9 fotos da aula, fórmulas explicadas passo a passo e exemplo executável em Python.
