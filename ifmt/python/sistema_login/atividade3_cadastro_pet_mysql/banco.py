@@ -1,4 +1,4 @@
-"""Persistência do cadastro de PETs, aproveitando os usuários da atividade 2."""
+"""Banco MySQL: usuários, login e cadastro de PETs."""
 
 import hashlib
 import hmac
@@ -9,7 +9,7 @@ from decimal import Decimal, InvalidOperation
 from pathlib import Path
 
 from dotenv import load_dotenv
-from sqlalchemy import ForeignKey, Integer, Numeric, String, create_engine, select
+from sqlalchemy import ForeignKey, Numeric, String, create_engine, select
 from sqlalchemy.engine import URL
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import DeclarativeBase, Mapped, Session, mapped_column
@@ -23,7 +23,7 @@ class Base(DeclarativeBase):
 
 
 class Usuario(Base):
-    # A mesma tabela da atividade anterior: as contas já cadastradas continuam válidas.
+    # Mesma estrutura da atividade 2: permite usar as contas anteriores.
     __tablename__ = "usuarios"
 
     id: Mapped[int] = mapped_column(primary_key=True)
@@ -36,32 +36,26 @@ class Pet(Base):
     __tablename__ = "pets"
 
     id: Mapped[int] = mapped_column(primary_key=True)
-    usuario_id: Mapped[int] = mapped_column(ForeignKey("usuarios.id"), index=True, nullable=False)
+    usuario_id: Mapped[int] = mapped_column(ForeignKey("usuarios.id"), nullable=False)
     nome: Mapped[str] = mapped_column(String(80), nullable=False)
-    idade: Mapped[int] = mapped_column(Integer, nullable=False)
+    idade: Mapped[int] = mapped_column(nullable=False)
     raca: Mapped[str] = mapped_column(String(80), nullable=False)
     peso: Mapped[Decimal] = mapped_column(Numeric(7, 2), nullable=False)
     cor: Mapped[str] = mapped_column(String(80), nullable=False)
-    situacao: Mapped[str] = mapped_column(String(20), nullable=False, default="Tenho atualmente")
 
 
 engine = None
-SITUACOES = ("Tenho atualmente", "Já tive")
 
 
-def _hash_senha(senha, salt):
+def proteger_senha(senha, salt):
     return hashlib.pbkdf2_hmac("sha256", senha.encode("utf-8"), salt, 200_000).hex()
 
 
 def iniciar_banco():
-    """Conecta ao MySQL, cria as tabelas e mantém compatibilidade com a atividade 2."""
     global engine
-    if engine is not None:
-        return
-
     nome_banco = os.getenv("MYSQL_DATABASE", "sistema_login")
     if not re.fullmatch(r"[A-Za-z0-9_]+", nome_banco):
-        raise ValueError("Nome do banco de dados inválido.")
+        raise ValueError("Nome do banco inválido.")
 
     url = URL.create(
         "mysql+pymysql",
@@ -79,43 +73,38 @@ def iniciar_banco():
         if not caminho.is_absolute():
             caminho = Path(__file__).resolve().parent / caminho
         if not caminho.is_file():
-            raise FileNotFoundError(f"Certificado SSL não encontrado: {caminho}")
+            raise FileNotFoundError("Certificado SSL não encontrado.")
         opcoes.update(ssl_ca=str(caminho), ssl_verify_cert=True, ssl_verify_identity=True)
 
-    novo_engine = create_engine(url, pool_pre_ping=True, connect_args=opcoes)
-    Base.metadata.create_all(novo_engine)
-    engine = novo_engine
+    engine = create_engine(url, pool_pre_ping=True, connect_args=opcoes)
+    Base.metadata.create_all(engine)
 
-    # Exemplo para o professor testar num banco vazio. Não cria duplicatas.
+    # Login inicial de exemplo, criado somente se não houver usuários no banco.
     with Session(engine) as sessao:
         if sessao.scalar(select(Usuario.id).limit(1)) is None:
             salt = secrets.token_bytes(16)
-            sessao.add(Usuario(nome="Fulano", salt=salt.hex(), hash_senha=_hash_senha("1234", salt)))
+            sessao.add(Usuario(nome="Fulano", salt=salt.hex(), hash_senha=proteger_senha("1234", salt)))
             sessao.commit()
 
 
 def autenticar(login, senha):
-    """Retorna (id, login) da pessoa autenticada, ou None."""
     with Session(engine) as sessao:
         usuario = sessao.scalar(select(Usuario).where(Usuario.nome == login.strip()))
         if usuario is None:
             return None
-        recebido = _hash_senha(senha, bytes.fromhex(usuario.salt))
-        if not hmac.compare_digest(recebido, usuario.hash_senha):
-            return None
-        return usuario.id, usuario.nome
+        senha_recebida = proteger_senha(senha, bytes.fromhex(usuario.salt))
+        if hmac.compare_digest(senha_recebida, usuario.hash_senha):
+            return usuario.id, usuario.nome
+        return None
 
 
-def criar_usuario(login, senha):
+def cadastrar_usuario(login, senha):
     login = login.strip()
-    if not login or len(login) > 80:
-        raise ValueError("O login deve ter entre 1 e 80 caracteres.")
-    if not senha:
-        raise ValueError("Informe uma senha.")
-
+    if not login or len(login) > 80 or not senha:
+        raise ValueError("Informe um login (até 80 caracteres) e uma senha.")
     salt = secrets.token_bytes(16)
     with Session(engine) as sessao:
-        sessao.add(Usuario(nome=login, salt=salt.hex(), hash_senha=_hash_senha(senha, salt)))
+        sessao.add(Usuario(nome=login, salt=salt.hex(), hash_senha=proteger_senha(senha, salt)))
         try:
             sessao.commit()
             return True
@@ -124,75 +113,42 @@ def criar_usuario(login, senha):
             return False
 
 
-def _validar_pet(nome, idade, raca, peso, cor, situacao):
+def cadastrar_pet(usuario_id, nome, idade, raca, peso, cor):
     nome, raca, cor = nome.strip(), raca.strip(), cor.strip()
-    if not all((nome, raca, cor)):
-        raise ValueError("Preencha nome, raça e cor do PET.")
-    if any(len(texto) > 80 for texto in (nome, raca, cor)):
-        raise ValueError("Nome, raça e cor devem ter até 80 caracteres.")
-
+    if not all((nome, raca, cor)) or any(len(x) > 80 for x in (nome, raca, cor)):
+        raise ValueError("Preencha nome, raça e cor (até 80 caracteres cada).")
     try:
         idade = int(idade)
-    except (ValueError, TypeError) as exc:
-        raise ValueError("Informe uma idade inteira.") from exc
+    except (TypeError, ValueError) as erro:
+        raise ValueError("A idade precisa ser um número inteiro.") from erro
     if not 0 <= idade <= 200:
-        raise ValueError("A idade deve estar entre 0 e 200 anos.")
-
+        raise ValueError("A idade deve ser de 0 a 200 anos.")
     try:
         peso = Decimal(str(peso).strip().replace(",", "."))
-    except (InvalidOperation, ValueError) as exc:
-        raise ValueError("Informe um peso válido em kg (ex.: 4,50).") from exc
+    except (InvalidOperation, ValueError) as erro:
+        raise ValueError("Informe o peso em kg, por exemplo: 4,5.") from erro
     if not peso.is_finite() or not Decimal("0") < peso <= Decimal("99999.99"):
-        raise ValueError("O peso deve ser maior que zero e até 99999,99 kg.")
+        raise ValueError("O peso deve ser maior que zero.")
     peso = peso.quantize(Decimal("0.01"))
     if peso == 0:
-        raise ValueError("O peso deve ser maior que zero.")
+        raise ValueError("Informe um peso de pelo menos 0,01 kg.")
 
-    if situacao not in SITUACOES:
-        raise ValueError("Selecione a situação do PET.")
-    return nome, idade, raca, peso, cor, situacao
-
-
-def cadastrar_pet(usuario_id, nome, idade, raca, peso, cor, situacao):
-    dados = _validar_pet(nome, idade, raca, peso, cor, situacao)
     with Session(engine) as sessao:
-        pet = Pet(usuario_id=usuario_id)
-        pet.nome, pet.idade, pet.raca, pet.peso, pet.cor, pet.situacao = dados
-        sessao.add(pet)
-        sessao.flush()
-        identificador = pet.id
+        sessao.add(Pet(
+            usuario_id=usuario_id,
+            nome=nome,
+            idade=idade,
+            raca=raca,
+            peso=peso,
+            cor=cor,
+        ))
         sessao.commit()
-        return identificador
 
 
 def listar_pets(usuario_id):
-    """A consulta SEMPRE restringe os resultados ao usuário logado."""
+    # O filtro impede que uma conta veja os PETs de outra.
     with Session(engine) as sessao:
         pets = sessao.scalars(
-            select(Pet).where(Pet.usuario_id == usuario_id).order_by(Pet.id.desc())
+            select(Pet).where(Pet.usuario_id == usuario_id).order_by(Pet.id)
         ).all()
-        return [
-            (p.id, p.nome, p.idade, p.raca, p.peso, p.cor, p.situacao)
-            for p in pets
-        ]
-
-
-def atualizar_pet(usuario_id, pet_id, nome, idade, raca, peso, cor, situacao):
-    dados = _validar_pet(nome, idade, raca, peso, cor, situacao)
-    with Session(engine) as sessao:
-        pet = sessao.scalar(select(Pet).where(Pet.id == pet_id, Pet.usuario_id == usuario_id))
-        if pet is None:
-            return False
-        pet.nome, pet.idade, pet.raca, pet.peso, pet.cor, pet.situacao = dados
-        sessao.commit()
-        return True
-
-
-def excluir_pet(usuario_id, pet_id):
-    with Session(engine) as sessao:
-        pet = sessao.scalar(select(Pet).where(Pet.id == pet_id, Pet.usuario_id == usuario_id))
-        if pet is None:
-            return False
-        sessao.delete(pet)
-        sessao.commit()
-        return True
+        return [(p.nome, p.idade, p.raca, p.peso, p.cor) for p in pets]
