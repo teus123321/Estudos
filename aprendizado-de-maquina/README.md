@@ -18,3 +18,7 @@ python classificar_digitos.py
 3. Troque apenas `n_neighbors` de 3 para 5. Mantenha a divisão de dados fixa e compare os erros. Se for escolher o melhor valor de forma sistemática, faça essa escolha por validação dentro do conjunto de treino e reserve o teste para a avaliação final.
 
 Para aproximar a prática do OCR de chassi e motor, registre a diferença entre acertar um caractere isolado e acertar uma sequência inteira.
+
+## Laboratórios do Coursera
+
+- **Curso 1 · Semana 1 · Lab 02:** [Representação do modelo de regressão linear](coursera/curso-1/semana-1/lab-02-representacao-modelo/README.md) — notebook original e explicação completa em português.
