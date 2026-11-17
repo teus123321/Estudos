@@ -1,88 +1,39 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-// Mostra todos os elementos do vetor na tela.
-void imprimirVetor(const int vetor[], int tamanho) {
-    for (int posicao = 0; posicao < tamanho; posicao++) {
-        printf("%d ", vetor[posicao]);
-    }
+void printArr(const int a[], int n) {
+    for (int i = 0; i < n; i++) printf("%d ", a[i]);
     printf("\n");
 }
 
-// MERGE: junta duas metades ja ordenadas em uma unica parte ordenada.
-// A metade esquerda vai de inicio ate meio.
-// A metade direita vai de meio + 1 ate fim.
-void merge(int vetor[], int inicio, int meio, int fim) {
-    int quantidade = fim - inicio + 1;
-    int *temporario = malloc(quantidade * sizeof(int));
-
-    if (temporario == NULL) {
-        fprintf(stderr, "Erro ao reservar memoria.\n");
-        exit(EXIT_FAILURE);
+void merge(int a[], int lo, int mid, int hi) {
+    int* tmp = malloc((hi - lo + 1) * sizeof(int));
+    int i = lo, j = mid + 1, k = 0;
+    while (i <= mid && j <= hi) {
+        if (a[i] <= a[j]) tmp[k++] = a[i++];
+        else tmp[k++] = a[j++];
     }
-
-    int indiceEsquerda = inicio;
-    int indiceDireita = meio + 1;
-    int indiceTemporario = 0;
-
-    // Compara as duas metades e guarda o menor elemento primeiro.
-    while (indiceEsquerda <= meio && indiceDireita <= fim) {
-        if (vetor[indiceEsquerda] <= vetor[indiceDireita]) {
-            temporario[indiceTemporario] = vetor[indiceEsquerda];
-            indiceEsquerda++;
-        } else {
-            temporario[indiceTemporario] = vetor[indiceDireita];
-            indiceDireita++;
-        }
-        indiceTemporario++;
-    }
-
-    // Copia os elementos que sobrarem na metade esquerda.
-    while (indiceEsquerda <= meio) {
-        temporario[indiceTemporario] = vetor[indiceEsquerda];
-        indiceEsquerda++;
-        indiceTemporario++;
-    }
-
-    // Copia os elementos que sobrarem na metade direita.
-    while (indiceDireita <= fim) {
-        temporario[indiceTemporario] = vetor[indiceDireita];
-        indiceDireita++;
-        indiceTemporario++;
-    }
-
-    // Coloca os valores ordenados de volta no vetor original.
-    for (int posicao = 0; posicao < quantidade; posicao++) {
-        vetor[inicio + posicao] = temporario[posicao];
-    }
-
-    free(temporario); // Libera a memoria usada pelo vetor temporario.
+    while (i <= mid) tmp[k++] = a[i++];
+    while (j <= hi) tmp[k++] = a[j++];
+    for (k = 0; k <= hi - lo; k++) a[lo + k] = tmp[k];
+    free(tmp);
 }
 
-// MERGE SORT: divide o vetor em metades ate restar um elemento por parte.
-void mergeSort(int vetor[], int inicio, int fim) {
-    if (inicio >= fim) {
-        return; // Uma parte com 0 ou 1 elemento ja esta ordenada.
-    }
-
-    int meio = inicio + (fim - inicio) / 2;
-
-    mergeSort(vetor, inicio, meio);    // Ordena a metade esquerda.
-    mergeSort(vetor, meio + 1, fim);   // Ordena a metade direita.
-    merge(vetor, inicio, meio, fim);   // Junta as duas metades ordenadas.
+void mergeSort(int a[], int lo, int hi) {
+    if (lo >= hi) return;
+    int mid = lo + (hi - lo) / 2;
+    mergeSort(a, lo, mid);      // sort the left half
+    mergeSort(a, mid + 1, hi);  // sort the right half
+    merge(a, lo, mid, hi);      // merge the sorted halves
 }
 
 int main(void) {
-    int numeros[] = {38, 27, 43, 3, 9, 82, 10};
-    int tamanho = sizeof(numeros) / sizeof(numeros[0]);
-
-    printf("Antes:  ");
-    imprimirVetor(numeros, tamanho);
-
-    mergeSort(numeros, 0, tamanho - 1);
-
-    printf("Depois: ");
-    imprimirVetor(numeros, tamanho);
-
+    int data[] = {38, 27, 43, 3, 9, 82, 10};
+    int n = sizeof(data) / sizeof(data[0]);
+    printf("Before: ");
+    printArr(data, n);
+    mergeSort(data, 0, n - 1);
+    printf("After:  ");
+    printArr(data, n);
     return 0;
 }
