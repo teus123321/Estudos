@@ -1,62 +1,88 @@
 #include <stdio.h>
 #include <cuda_runtime.h>
 
-// ABSTRAÇÃO: esta classe define o que todo personagem sabe fazer.
+// CLASSE BASE: Personagem define as características de todos os personagens.
+// ABSTRAÇÃO: sabemos que todo personagem ataca, mas cada tipo ataca de um jeito.
 class Personagem {
 private:
-    int poder; // ENCAPSULAMENTO: não pode ser alterado diretamente de fora.
+    // ENCAPSULAMENTO: o atributo só pode ser acessado pelos métodos da classe.
+    int poder;
 
 public:
-    __device__ Personagem(int valor) : poder(valor) {}
+    // CONSTRUTOR: roda quando um personagem é criado.
+    // __device__ indica que esse construtor é executado na GPU.
+    // O parâmetro "valor" é recebido e guardado no atributo "poder".
+    __device__ Personagem(int valor) {
+        poder = valor;
+    }
 
+    // GETTER: permite ler o poder sem acessar o atributo privado diretamente.
+    // const: o método promete não alterar os atributos do objeto.
     __device__ int getPoder() const {
         return poder;
     }
 
-    // Método abstrato: cada classe filha precisa definir como atacar.
+    // __device__: este método pertence ao código executado na GPU.
+    // virtual: permite usar a versão de atacar() da classe filha.
+    // const: atacar() não modifica o objeto.
+    // = 0: método abstrato; toda classe filha precisa implementá-lo.
     __device__ virtual int atacar() const = 0;
 
+    // ~Personagem(): destrutor, chamado quando o objeto é destruído.
+    // virtual garante destruição correta quando usamos a classe base.
     __device__ virtual ~Personagem() {}
 };
 
-// HERANÇA: Guerreiro é um tipo de Personagem.
+// HERANÇA: Guerreiro reaproveita a classe Personagem.
+// ": public Personagem" significa "Guerreiro é um Personagem".
 class Guerreiro : public Personagem {
 public:
+    // Os dois-pontos aqui chamam o CONSTRUTOR DA CLASSE PAI.
+    // Primeiro, Personagem(valor) guarda o poder; depois, Guerreiro fica pronto.
+    // Isso NÃO é a mesma coisa que os dois-pontos em "private:" ou "public:".
     __device__ Guerreiro(int valor) : Personagem(valor) {}
 
+    // override: substitui o método virtual atacar() definido em Personagem.
     __device__ int atacar() const override {
-        return getPoder() * 2;
+        return getPoder() * 2; // Guerreiro causa o dobro do poder.
     }
 };
 
-// HERANÇA: Mago também é um tipo de Personagem.
+// HERANÇA: Mago também reaproveita Personagem, mas ataca de outro jeito.
 class Mago : public Personagem {
 public:
+    // Chama o construtor da classe pai para guardar o valor do poder.
     __device__ Mago(int valor) : Personagem(valor) {}
 
     __device__ int atacar() const override {
-        return getPoder() + 10;
+        return getPoder() + 10; // Mago acrescenta 10 pontos ao poder.
     }
 };
 
 // POLIMORFISMO: recebe qualquer classe filha de Personagem.
-// O método atacar() executado depende do tipo real do objeto.
+// O símbolo & indica que recebemos o objeto por referência (sem copiá-lo).
+// Se receber Guerreiro, chama Guerreiro::atacar(). Se receber Mago,
+// chama Mago::atacar(). O mesmo nome "atacar" tem comportamentos diferentes.
 __device__ int realizarAtaque(const Personagem &personagem) {
     return personagem.atacar();
 }
 
-// Cada thread da GPU calcula o dano de um personagem.
+// __global__: esta função é chamada pela CPU, mas executada na GPU.
+// Cada thread da GPU calcula o dano de UM personagem.
 __global__ void calcularDanos(const int *poderes, int *danos, int quantidade) {
+    // threadIdx.x: posição da thread dentro do bloco.
+    // blockIdx.x: número do bloco; blockDim.x: threads por bloco.
+    // Juntos, calculam o índice do personagem que esta thread processa.
     int i = blockIdx.x * blockDim.x + threadIdx.x;
 
     if (i >= quantidade) {
         return;
     }
 
-    if (i % 2 == 0) {
+    if (i % 2 == 0) { // Índices pares: Guerreiro.
         Guerreiro guerreiro(poderes[i]); // Objeto criado na GPU.
         danos[i] = realizarAtaque(guerreiro);
-    } else {
+    } else { // Índices ímpares: Mago.
         Mago mago(poderes[i]); // Outro tipo de objeto na GPU.
         danos[i] = realizarAtaque(mago);
     }
@@ -85,7 +111,7 @@ int main() {
         poderes[i] = valores[i];
     }
 
-    // 1 bloco com 6 threads: uma thread por personagem.
+    // <<<1, quantidade>>>: 1 bloco com 6 threads, uma por personagem.
     calcularDanos<<<1, quantidade>>>(poderes, danos, quantidade);
 
     cudaError_t erro = cudaGetLastError();
