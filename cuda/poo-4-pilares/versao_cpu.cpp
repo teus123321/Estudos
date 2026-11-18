@@ -1,32 +1,48 @@
 #include <stdio.h>
 
-// Mesma ideia do exemplo CUDA, mas executada somente na CPU.
+// PRIMEIRO ESTUDE ESTE ARQUIVO: POO em C++ comum, sem termos do CUDA.
+// Depois compare com personagens.cu e observe os marcadores __device__.
+
+// ABSTRAÇÃO: define a ideia geral de um personagem.
 class Personagem {
 private:
-    int poder;
+    int poder; // ENCAPSULAMENTO: atributo privado.
 
 public:
-    Personagem(int valor) : poder(valor) {}
+    // Construtor: recebe o valor e guarda no atributo poder.
+    Personagem(int valor) {
+        poder = valor;
+    }
 
+    // const: este método não modifica o objeto.
     int getPoder() const {
         return poder;
     }
 
+    // virtual: permite que as classes filhas mudem o comportamento.
+    // = 0: toda classe filha deve implementar este método.
     virtual int atacar() const = 0;
+
+    // Destrutor da classe base (virtual por segurança com polimorfismo).
     virtual ~Personagem() {}
 };
 
+// HERANÇA: Guerreiro é um Personagem.
 class Guerreiro : public Personagem {
 public:
+    // ": Personagem(valor)" chama o construtor da classe pai.
     Guerreiro(int valor) : Personagem(valor) {}
 
+    // override: escreve a versão de atacar() do Guerreiro.
     int atacar() const override {
         return getPoder() * 2;
     }
 };
 
+// HERANÇA: Mago também é um Personagem.
 class Mago : public Personagem {
 public:
+    // Também chama o construtor da classe pai.
     Mago(int valor) : Personagem(valor) {}
 
     int atacar() const override {
@@ -35,6 +51,7 @@ public:
 };
 
 // A mesma função funciona com Guerreiros ou Magos (polimorfismo).
+// O & significa que a função recebe o objeto por referência.
 int realizarAtaque(const Personagem &personagem) {
     return personagem.atacar();
 }
