@@ -4,6 +4,7 @@ As telas nunca executam SQL diretamente: chamam as funções deste arquivo.
 Para os testes automatizados, o engine pode ser trocado por SQLite em memória.
 """
 
+# A cidade sugerida fica centralizada no arquivo regiao.py.
 from regiao import CIDADE_PADRAO
 import hashlib
 import hmac
@@ -17,8 +18,10 @@ from dotenv import load_dotenv
 from sqlalchemy import Boolean, DateTime, ForeignKey, String, Text, UniqueConstraint, create_engine, select
 from sqlalchemy.engine import URL
 from sqlalchemy.exc import IntegrityError
+# O ORM associa classes Python às tabelas e usa Session para consultar e gravar.
 from sqlalchemy.orm import DeclarativeBase, Mapped, Session, mapped_column
 
+# Carrega a configuração do arquivo .env situado ao lado deste código.
 load_dotenv(Path(__file__).resolve().parent / ".env")
 
 
@@ -32,11 +35,16 @@ class Base(DeclarativeBase):
 
 
 class Usuario(Base):
+    """Representa uma linha de usuarios, identificada como candidato ou empresa."""
+    # Esta classe representa a tabela usuarios, compartilhada por candidatos e empresas.
     __tablename__ = "usuarios"
 
+    # Mapped[int] indica um atributo inteiro do ORM. primary_key identifica cada registro.
     id: Mapped[int] = mapped_column(primary_key=True)
     nome: Mapped[str] = mapped_column(String(100), nullable=False)
+    # unique=True exige e-mail exclusivo. nullable=False exige valor diferente de NULL.
     email: Mapped[str] = mapped_column(String(150), unique=True, nullable=False)
+    # O salt é aleatório por conta. Ele é usado novamente quando a senha é conferida.
     salt: Mapped[str] = mapped_column(String(32), nullable=False)
     hash_senha: Mapped[str] = mapped_column(String(64), nullable=False)
     tipo: Mapped[str] = mapped_column(String(15), nullable=False)  # candidato ou empresa
@@ -47,9 +55,12 @@ class Usuario(Base):
 
 
 class Vaga(Base):
+    """Representa um anúncio ligado à conta da empresa que o publicou."""
     __tablename__ = "vagas"
 
+    # Mapped[int] indica um atributo inteiro do ORM. primary_key identifica cada registro.
     id: Mapped[int] = mapped_column(primary_key=True)
+    # Chave estrangeira que relaciona cada vaga ao ID da conta que a publicou.
     empresa_id: Mapped[int] = mapped_column(ForeignKey("usuarios.id"), nullable=False)
     titulo: Mapped[str] = mapped_column(String(120), nullable=False)
     area: Mapped[str] = mapped_column(String(80), nullable=False)
@@ -64,17 +75,23 @@ class Vaga(Base):
 
 
 class Candidatura(Base):
+    """Liga um candidato a uma vaga e guarda a situação da inscrição."""
     __tablename__ = "candidaturas"
+    # A combinação candidato + vaga deve ser única, inclusive em requisições simultâneas.
     __table_args__ = (UniqueConstraint("candidato_id", "vaga_id", name="uq_candidato_vaga"),)
 
+    # Mapped[int] indica um atributo inteiro do ORM. primary_key identifica cada registro.
     id: Mapped[int] = mapped_column(primary_key=True)
+    # ID da conta de candidato que realizou esta inscrição.
     candidato_id: Mapped[int] = mapped_column(ForeignKey("usuarios.id"), nullable=False)
+    # ID da oportunidade à qual a candidatura se refere.
     vaga_id: Mapped[int] = mapped_column(ForeignKey("vagas.id"), nullable=False)
     mensagem: Mapped[str] = mapped_column(Text, default="", nullable=False)
     status: Mapped[str] = mapped_column(String(20), default="Enviada", nullable=False)
     enviada_em: Mapped[datetime] = mapped_column(DateTime, default=agora_utc, nullable=False)
 
 
+# engine representará a conexão e o gerenciamento das conexões com o MySQL.
 engine = None
 
 
@@ -83,11 +100,13 @@ def iniciar_banco():
 
     O BANCO em si deve ser criado no MySQL Workbench, usando sql/criar_banco.sql.
     """
+    # Atribui ao engine do módulo para as outras funções usarem o mesmo gerenciador.
     global engine
     database = os.getenv("MYSQL_DATABASE", "conectavagas")
     if not re.fullmatch(r"[A-Za-z0-9_]+", database):
         raise ValueError("Nome do banco inválido no arquivo .env.")
 
+    # Monta os dados de conexão. O driver pymysql permite ao Python falar com o MySQL.
     url = URL.create(
         drivername="mysql+pymysql",
         username=os.getenv("MYSQL_USER", "root"),
@@ -99,6 +118,7 @@ def iniciar_banco():
     )
     # O SQLAlchemy monta uma URL com senha protegida, sem concatenar SQL manualmente.
     engine = create_engine(url, pool_pre_ping=True, connect_args={"connect_timeout": 8})
+    # Cria tabelas ausentes a partir das classes. Alterações de tabelas existentes exigem migração.
     Base.metadata.create_all(engine)
 
 
@@ -106,15 +126,18 @@ def sessao_banco():
     """Devolve uma sessão usada dentro de `with Session(...)`."""
     if engine is None:
         raise RuntimeError("O banco não foi iniciado. Execute iniciar_banco() primeiro.")
+    # Cada operação usa uma sessão. O with fecha a sessão ao terminar, inclusive com erro.
     return Session(engine)
 
 
 def senha_para_hash(senha, salt):
     """Protege a senha com PBKDF2-HMAC-SHA256 (não salva a senha original)."""
+    # Deriva um hash com a senha e o salt. As 260 mil iterações tornam o cálculo mais caro.
     return hashlib.pbkdf2_hmac("sha256", senha.encode("utf-8"), salt, 260_000).hex()
 
 
 def _validar_email(email):
+    """Normaliza o e-mail e verifica formato e tamanho antes de gravar."""
     email = email.strip().lower()
     if len(email) > 150 or not re.fullmatch(r"[^\s@]+@[^\s@]+\.[^\s@]+", email):
         raise ValueError("Digite um e-mail válido (até 150 caracteres).")
@@ -122,6 +145,8 @@ def _validar_email(email):
 
 
 def _usuario_dict(u):
+    """Seleciona os dados do usuário que serão entregues às telas."""
+    # Monta um dicionário para a interface, deixando hash e salt na camada de dados.
     return {"id": u.id, "nome": u.nome, "email": u.email, "tipo": u.tipo,
             "telefone": u.telefone, "cidade": u.cidade, "resumo": u.resumo}
 
@@ -138,15 +163,20 @@ def cadastrar_usuario(nome, email, senha, tipo, telefone="", cidade=CIDADE_PADRA
     if len(telefone) > 25 or not 1 <= len(cidade) <= 100:
         raise ValueError("Verifique os campos telefone e cidade.")
 
+    # Gera 16 bytes aleatórios. hex() transforma esses bytes em texto para armazenamento.
     salt = secrets.token_bytes(16)
     with sessao_banco() as sessao:
         usuario = Usuario(nome=nome, email=email, tipo=tipo, telefone=telefone,
                           cidade=cidade, salt=salt.hex(), hash_senha=senha_para_hash(senha, salt))
+        # Coloca o objeto novo na sessão para ser inserido ao confirmar a transação.
         sessao.add(usuario)
         try:
+            # Confirma a transação. Os dados passam a ficar persistidos no banco.
             sessao.commit()
             return usuario.id
+        # A restrição UNIQUE do banco também protege a gravação contra duplicação.
         except IntegrityError as erro:
+            # Desfaz a transação que falhou antes de informar o problema para a tela.
             sessao.rollback()
             raise ValueError("Este e-mail já está cadastrado.") from erro
 
@@ -155,34 +185,43 @@ def autenticar(email, senha):
     """Confere e-mail e senha e retorna um dicionário, ou None se estiver incorreto."""
     email = email.strip().lower()
     with sessao_banco() as sessao:
+        # SELECT procura uma conta pelo e-mail. scalar() entrega o objeto ou None.
         usuario = sessao.scalar(select(Usuario).where(Usuario.email == email))
         if usuario is None:
             return None
+        # Recupera o salt salvo e calcula o hash da senha digitada com os mesmos parâmetros.
         hash_recebido = senha_para_hash(senha, bytes.fromhex(usuario.salt))
+        # Compara os hashes com uma função própria para comparar dados sensíveis.
         if hmac.compare_digest(hash_recebido, usuario.hash_senha):
             return _usuario_dict(usuario)
         return None
 
 
 def obter_usuario(usuario_id):
+    """Busca um usuário pela chave primária e devolve seus dados para a tela."""
     with sessao_banco() as sessao:
+        # get procura pela chave primária, o campo id da tabela usuarios.
         usuario = sessao.get(Usuario, usuario_id)
         return _usuario_dict(usuario) if usuario else None
 
 
 def atualizar_perfil(usuario_id, telefone, cidade, resumo):
+    """Valida os campos e confirma no banco as alterações do perfil."""
     telefone, cidade, resumo = telefone.strip(), cidade.strip(), resumo.strip()
     if len(telefone) > 25 or not 1 <= len(cidade) <= 100 or len(resumo) > 1500:
         raise ValueError("Verifique telefone, cidade (até 100) e resumo (até 1.500 caracteres).")
     with sessao_banco() as sessao:
+        # get procura pela chave primária, o campo id da tabela usuarios.
         usuario = sessao.get(Usuario, usuario_id)
         if usuario is None:
             raise ValueError("Usuário não encontrado.")
+        # Atribuir novos valores ao objeto permite ao ORM detectar o que deve atualizar.
         usuario.telefone, usuario.cidade, usuario.resumo = telefone, cidade, resumo
         sessao.commit()
 
 
 def _vaga_dict(vaga, empresa):
+    """Reúne os campos da vaga e o nome da empresa em um dicionário."""
     return {"id": vaga.id, "empresa_id": vaga.empresa_id, "empresa": empresa,
             "titulo": vaga.titulo, "area": vaga.area, "descricao": vaga.descricao,
             "requisitos": vaga.requisitos, "cidade": vaga.cidade, "modalidade": vaga.modalidade,
@@ -209,39 +248,50 @@ def criar_vaga(empresa_id, titulo, area, descricao, requisitos, cidade, modalida
         empresa = sessao.get(Usuario, empresa_id)
         if empresa is None or empresa.tipo != "empresa":
             raise ValueError("Somente uma conta de empresa pode publicar vagas.")
+        # Cria em memória uma instância da classe Vaga com os dados já validados.
         vaga = Vaga(empresa_id=empresa_id, titulo=titulo, area=area, descricao=descricao,
                     requisitos=requisitos, cidade=cidade, modalidade=modalidade,
                     contrato=contrato, remuneracao=remuneracao)
+        # Adiciona a vaga à sessão. A gravação é confirmada pelo commit logo abaixo.
         sessao.add(vaga)
         sessao.commit()
+        # O banco gerou o ID da vaga. Ele identifica o anúncio nas próximas operações.
         return vaga.id
 
 
 def listar_vagas(busca="", cidade=""):
     """Lista somente vagas ativas; o SELECT já relaciona vagas com usuários/empresas."""
     with sessao_banco() as sessao:
+        # join relaciona empresa_id e usuarios.id para obter a vaga junto ao nome da empresa.
         comando = (select(Vaga, Usuario.nome).join(Usuario, Vaga.empresa_id == Usuario.id)
                    .where(Vaga.ativa.is_(True)))
         if busca.strip():
+            # Os curingas % permitem encontrar a palavra em qualquer posição do título ou da área.
             termo = f"%{busca.strip()}%"
+            # ilike compara texto sem diferenciar maiúsculas. | expressa título OU área.
             comando = comando.where(Vaga.titulo.ilike(termo) | Vaga.area.ilike(termo))
         if cidade.strip():
             comando = comando.where(Vaga.cidade.ilike(f"%{cidade.strip()}%"))
+        # Executa a consulta ordenada pelas publicações mais recentes e recebe todas as linhas.
         resultados = sessao.execute(comando.order_by(Vaga.criada_em.desc(), Vaga.id.desc())).all()
+        # A compreensão converte cada resultado em um dicionário para a interface.
         return [_vaga_dict(v, empresa) for v, empresa in resultados]
 
 
 def obter_vaga(vaga_id):
+    """Busca uma vaga com o nome de sua empresa e devolve os detalhes."""
     with sessao_banco() as sessao:
         resultado = sessao.execute(select(Vaga, Usuario.nome).join(Usuario).where(Vaga.id == vaga_id)).first()
         return _vaga_dict(*resultado) if resultado else None
 
 
 def minhas_vagas(empresa_id):
+    """Consulta as vagas da empresa informada, incluindo as encerradas."""
     with sessao_banco() as sessao:
         linhas = sessao.execute(select(Vaga, Usuario.nome).join(Usuario)
                                .where(Vaga.empresa_id == empresa_id)
                                .order_by(Vaga.id.desc())).all()
+        # A compreensão converte cada resultado em um dicionário para a interface.
         return [_vaga_dict(v, e) for v, e in linhas]
 
 
@@ -251,6 +301,7 @@ def mudar_situacao_vaga(empresa_id, vaga_id, ativa):
         vaga = sessao.get(Vaga, vaga_id)
         if vaga is None or vaga.empresa_id != empresa_id:
             raise ValueError("Vaga não encontrada para esta empresa.")
+        # Atualiza o estado da vaga existente. False encerra a oferta e True reabre.
         vaga.ativa = bool(ativa)
         sessao.commit()
 
@@ -267,19 +318,25 @@ def candidatar(candidato_id, vaga_id, mensagem=""):
             raise ValueError("Somente candidatos podem se inscrever.")
         if vaga is None or not vaga.ativa:
             raise ValueError("Esta vaga não está disponível.")
+        # Consulta a combinação candidato e vaga antes de tentar registrar outra inscrição.
         existe = sessao.scalar(select(Candidatura.id).where(
             Candidatura.candidato_id == candidato_id, Candidatura.vaga_id == vaga_id))
         if existe is not None:
             raise ValueError("Você já se candidatou a esta vaga.")
+        # Cria a linha que liga o candidato à vaga. O status inicial padrão é Enviada.
         sessao.add(Candidatura(candidato_id=candidato_id, vaga_id=vaga_id, mensagem=mensagem))
         try:
+            # Confirma a transação. Os dados passam a ficar persistidos no banco.
             sessao.commit()
+        # A restrição UNIQUE do banco também protege a gravação contra duplicação.
         except IntegrityError as erro:
+            # Desfaz a transação que falhou antes de informar o problema para a tela.
             sessao.rollback()
             raise ValueError("Você já se candidatou a esta vaga.") from erro
 
 
 def minhas_candidaturas(candidato_id):
+    """Relaciona inscrição, vaga e empresa para o candidato acompanhar o status."""
     with sessao_banco() as sessao:
         linhas = sessao.execute(
             select(Candidatura, Vaga, Usuario.nome)
@@ -308,6 +365,7 @@ def candidatos_da_vaga(empresa_id, vaga_id):
 
 
 def mudar_status_candidatura(empresa_id, candidatura_id, novo_status):
+    """Valida o status e a propriedade da vaga antes de alterar a inscrição."""
     if novo_status not in {"Enviada", "Em análise", "Aprovada", "Recusada"}:
         raise ValueError("Situação de candidatura inválida.")
     with sessao_banco() as sessao:
@@ -315,5 +373,6 @@ def mudar_status_candidatura(empresa_id, candidatura_id, novo_status):
         vaga = sessao.get(Vaga, candidatura.vaga_id) if candidatura else None
         if vaga is None or vaga.empresa_id != empresa_id:
             raise ValueError("Você não pode alterar esta candidatura.")
+        # Altera a coluna status da inscrição. O commit abaixo confirma a atualização.
         candidatura.status = novo_status
         sessao.commit()

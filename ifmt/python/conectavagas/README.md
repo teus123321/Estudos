@@ -6,6 +6,12 @@ O enunciado cita Pontes e Lacerda (MT). Para apresentar nessa região, ajuste `C
 
 O ConectaVagas é um **aplicativo desktop** voltado a uma necessidade social regional: facilitar o encontro entre pessoas que procuram uma primeira oportunidade de emprego/estágio e empresas que precisam contratar. O aplicativo não utiliza Flask, HTML ou CSS.
 
+## Estudar e apresentar o código
+
+As classes e funções dos arquivos Python contêm explicações em português. Os comentários junto aos blocos mostram leitura de campos, eventos, navegação, validação, consultas e confirmação das transações.
+
+Comece pelo [guia de apresentação do código](docs/guia_apresentacao_codigo.md). Ele acompanha cadastro, login, publicação e candidatura, com exemplos de falas e consultas para executar no Workbench. Use também a [explicação do código](docs/explicacao_do_codigo.md).
+
 ## Principais funções
 
 - Candidato: criar conta, entrar, atualizar perfil, pesquisar vagas e se candidatar uma vez por vaga, acompanhar status.

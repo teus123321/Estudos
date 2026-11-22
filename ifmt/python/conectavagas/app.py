@@ -6,6 +6,7 @@ A classe JanelaPrincipal substitui uma tela pela outra.
 O arquivo banco.py faz todo o acesso ao servidor MySQL.
 """
 
+# wxPython fornece as janelas, os botões, os campos e os eventos de interface.
 import wx
 from sqlalchemy.exc import SQLAlchemyError
 
@@ -13,6 +14,7 @@ from regiao import CIDADE_PADRAO
 import banco
 from vagas_api import ErroAPI, buscar_vagas_externas, url_pesquisa_linkedin, url_segura
 
+# Cores compartilhadas ajudam a manter a aparência consistente nas telas.
 FUNDO = "#F4F7FB"
 TEXTO = "#182B45"
 AZUL = "#2465C2"
@@ -20,15 +22,18 @@ VERDE = "#168358"
 
 
 def avisar(mensagem, titulo="Atenção"):
+    """Exibe uma caixa de mensagem informativa com o texto recebido."""
     wx.MessageBox(mensagem, titulo, wx.OK | wx.ICON_INFORMATION)
 
 
 def erro_banco():
+    """Mostra uma orientação quando uma operação com o MySQL falha."""
     wx.MessageBox("Não foi possível acessar o MySQL. Confira se o servidor está ativo.",
                   "Erro no MySQL", wx.OK | wx.ICON_ERROR)
 
 
 def criar_texto(parent, texto, tamanho=10, negrito=False):
+    """Cria um rótulo visual e aplica fonte e cor padronizadas."""
     componente = wx.StaticText(parent, label=texto)
     componente.SetForegroundColour(TEXTO)
     componente.SetFont(wx.Font(tamanho, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL,
@@ -37,12 +42,15 @@ def criar_texto(parent, texto, tamanho=10, negrito=False):
 
 
 def criar_botao(parent, legenda, acao):
+    """Cria um botão e associa a função acao ao evento de clique."""
     botao = wx.Button(parent, label=legenda, size=(-1, 36))
+    # Bind registra a função. O wxPython a chama quando o usuário clica no botão.
     botao.Bind(wx.EVT_BUTTON, acao)
     return botao
 
 
 def formatar_data(data):
+    """Converte uma data para dia/mês/ano e trata a ausência de data."""
     return data.strftime("%d/%m/%Y") if data else "-"
 
 
@@ -50,14 +58,19 @@ class Pagina(wx.ScrolledWindow):
     """Pequena classe base: evita repetir estilos e criação de formulários."""
 
     def __init__(self, parent, janela):
+        """Prepara a área com rolagem e guarda a janela que controla a navegação."""
+        # super() executa a inicialização da classe herdada, wx.ScrolledWindow.
         super().__init__(parent, style=wx.VSCROLL)
+        # self é esta página. janela é o objeto central que guarda o login e troca as telas.
         self.janela = janela
         self.SetBackgroundColour(FUNDO)
         self.SetScrollRate(0, 18)
+        # O sizer organiza os controles de cima para baixo. SetSizer o associa à página.
         self.conteudo = wx.BoxSizer(wx.VERTICAL)
         self.SetSizer(self.conteudo)
 
     def titulo(self, principal, subtitulo=""):
+        """Adiciona o título e, quando informado, o subtítulo da página."""
         self.conteudo.Add(criar_texto(self, principal, 21, True), 0, wx.ALL, 14)
         if subtitulo:
             desc = criar_texto(self, subtitulo, 10)
@@ -65,14 +78,18 @@ class Pagina(wx.ScrolledWindow):
             self.conteudo.Add(desc, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM, 14)
 
     def campo(self, legenda, valor="", multiline=False, senha=False):
+        """Cria um campo, configura senha ou várias linhas e devolve o controle."""
         self.conteudo.Add(criar_texto(self, legenda, 10, True), 0, wx.LEFT | wx.TOP, 14)
+        # As opções de estilo são combinadas com |. TE_PASSWORD oculta os caracteres.
         estilo = (wx.TE_MULTILINE if multiline else 0) | (wx.TE_PASSWORD if senha else 0)
         entrada = wx.TextCtrl(self, value=valor, style=estilo,
                               size=(-1, 95 if multiline else 32))
         self.conteudo.Add(entrada, 0, wx.EXPAND | wx.LEFT | wx.RIGHT | wx.TOP, 14)
+        # Devolve o controle para a tela poder ler o conteúdo com GetValue() depois.
         return entrada
 
     def escolha(self, legenda, opcoes):
+        """Cria uma lista de opções e seleciona inicialmente a primeira."""
         self.conteudo.Add(criar_texto(self, legenda, 10, True), 0, wx.LEFT | wx.TOP, 14)
         escolha = wx.Choice(self, choices=opcoes)
         escolha.SetSelection(0)
@@ -80,12 +97,15 @@ class Pagina(wx.ScrolledWindow):
         return escolha
 
     def linha_botoes(self, botoes):
+        """Recebe pares de legenda e função para montar uma fileira de botões."""
         linha = wx.BoxSizer(wx.HORIZONTAL)
+        # Cada par contém o texto do botão e a função que será chamada ao clicar.
         for legenda, acao in botoes:
             linha.Add(criar_botao(self, legenda, acao), 0, wx.RIGHT, 10)
         self.conteudo.Add(linha, 0, wx.ALL, 14)
 
     def paragrafo(self, texto):
+        """Adiciona texto com quebra de linha ajustada à largura da página."""
         controle = criar_texto(self, texto, 10)
         controle.Wrap(930)
         self.conteudo.Add(controle, 0, wx.ALL, 14)
@@ -93,7 +113,9 @@ class Pagina(wx.ScrolledWindow):
 
 
 class TelaInicio(Pagina):
+    """Apresenta o objetivo do sistema e os caminhos para começar a navegação."""
     def __init__(self, parent, janela):
+        """Cria os controles da tela e liga os botões às ações disponíveis."""
         super().__init__(parent, janela)
         self.titulo("ConectaVagas", f"Oportunidades de emprego e estágio para {CIDADE_PADRAO} e região.")
         self.paragrafo(
@@ -102,6 +124,8 @@ class TelaInicio(Pagina):
             "A empresa publica vagas e gerencia seus candidatos."
         )
         self.linha_botoes([
+            # lambda cria uma função curta. ev recebe o evento do clique.
+            # A troca de tela ocorre quando o botão é clicado.
             ("Encontrar vagas", lambda ev: janela.ir(TelaVagas)),
             ("Buscar vagas externas", lambda ev: janela.ir(TelaExternas)),
             ("Entender o projeto", lambda ev: janela.ir(TelaSobre)),
@@ -119,7 +143,9 @@ class TelaInicio(Pagina):
 
 
 class TelaCadastro(Pagina):
+    """Monta o formulário para registrar uma conta de candidato ou empresa."""
     def __init__(self, parent, janela):
+        """Cria os controles da tela e liga os botões às ações disponíveis."""
         super().__init__(parent, janela)
         self.titulo("Criar conta", "Escolha se você deseja procurar emprego ou anunciar oportunidades.")
         self.nome = self.campo("Nome completo ou nome da empresa")
@@ -132,14 +158,19 @@ class TelaCadastro(Pagina):
                            ("Voltar ao login", lambda ev: janela.ir(TelaLogin))])
 
     def salvar(self, evento):
+        """Lê o formulário, solicita o cadastro ao banco e abre o login se der certo."""
+        # A primeira opção tem índice 0. O texto visual é convertido no valor usado no banco.
         tipo = "candidato" if self.tipo.GetSelection() == 0 else "empresa"
         try:
+            # GetValue() lê o texto atual de cada campo e o envia para a função do banco.
             banco.cadastrar_usuario(self.nome.GetValue(), self.email.GetValue(),
                                    self.senha.GetValue(), tipo,
                                    self.telefone.GetValue(), self.cidade.GetValue())
+        # Uma regra de validação impediu a operação. Mostramos a razão ao usuário.
         except ValueError as erro:
             avisar(str(erro), "Verifique o cadastro")
             return
+        # Uma falha de acesso ao banco é tratada para a tela continuar utilizável.
         except SQLAlchemyError:
             erro_banco()
             return
@@ -148,7 +179,9 @@ class TelaCadastro(Pagina):
 
 
 class TelaLogin(Pagina):
+    """Recebe as credenciais e direciona o usuário conforme o tipo de conta."""
     def __init__(self, parent, janela):
+        """Cria os controles da tela e liga os botões às ações disponíveis."""
         super().__init__(parent, janela)
         self.titulo("Entrar", "Use o e-mail e a senha cadastrados neste aplicativo.")
         self.email = self.campo("E-mail")
@@ -157,15 +190,19 @@ class TelaLogin(Pagina):
                            ("Criar conta", lambda ev: janela.ir(TelaCadastro))])
 
     def entrar(self, evento):
+        """Confere as credenciais, guarda o usuário logado e escolhe a próxima tela."""
         try:
             usuario = banco.autenticar(self.email.GetValue(), self.senha.GetValue())
+        # Uma falha de acesso ao banco é tratada para a tela continuar utilizável.
         except SQLAlchemyError:
             erro_banco()
             return
         if usuario is None:
             avisar("E-mail ou senha incorretos.", "Acesso negado")
             return
+        # Guarda os dados da conta em memória para saber quem está usando o aplicativo.
         self.janela.usuario = usuario
+        # O tipo de conta define se a próxima tela será o painel da empresa ou a busca.
         if usuario["tipo"] == "empresa":
             self.janela.ir(TelaEmpresa)
         else:
@@ -173,7 +210,9 @@ class TelaLogin(Pagina):
 
 
 class TelaVagas(Pagina):
+    """Exibe as vagas locais abertas e permite filtrar por termo e cidade."""
     def __init__(self, parent, janela):
+        """Cria os controles da tela e liga os botões às ações disponíveis."""
         super().__init__(parent, janela)
         self.titulo("Vagas locais", "Oportunidades publicadas pelas empresas cadastradas no ConectaVagas.")
         self.busca = self.campo("Palavra-chave: título ou área (opcional)")
@@ -191,15 +230,20 @@ class TelaVagas(Pagina):
         self.lista.Bind(wx.EVT_LIST_ITEM_ACTIVATED, self.detalhes)
         self.linha_botoes([("Ver detalhes da vaga", self.detalhes),
                            ("Pesquisar na Adzuna", lambda ev: janela.ir(TelaExternas))])
+        # Guarda os dados completos. A lista visual mostra só algumas colunas desses dados.
         self.vagas = []
+        # Preenche a lista ao abrir a tela. None indica que a chamada ocorreu sem clique.
         self.atualizar(None)
 
     def atualizar(self, evento):
+        """Consulta o banco com os filtros e preenche novamente a lista visual."""
         try:
             self.vagas = banco.listar_vagas(self.busca.GetValue(), self.cidade.GetValue())
+        # Uma falha de acesso ao banco é tratada para a tela continuar utilizável.
         except SQLAlchemyError:
             erro_banco()
             return
+        # Limpa as linhas visuais antes de exibir a nova consulta, evitando duplicação.
         self.lista.DeleteAllItems()
         for vaga in self.vagas:
             i = self.lista.InsertItem(self.lista.GetItemCount(), vaga["titulo"])
@@ -208,24 +252,32 @@ class TelaVagas(Pagina):
                 self.lista.SetItem(i, coluna, str(valor))
 
     def limpar(self, evento):
+        """Apaga os filtros e refaz a consulta de vagas abertas."""
         self.busca.SetValue("")
         self.cidade.SetValue("")
+        # Preenche a lista ao abrir a tela. None indica que a chamada ocorreu sem clique.
         self.atualizar(None)
 
     def detalhes(self, evento):
+        """Obtém o ID da vaga selecionada e abre a tela de detalhes."""
+        # O índice é a posição da linha visual. -1 significa que nenhuma linha foi escolhida.
         indice = self.lista.GetFirstSelected()
         if indice < 0:
             avisar("Selecione uma vaga na lista.")
             return
+        # Usa o ID do banco da vaga escolhida, que pode ser diferente do índice da lista.
         self.janela.ir(TelaDetalhes, vaga_id=self.vagas[indice]["id"])
 
 
 class TelaDetalhes(Pagina):
+    """Mostra uma vaga e oferece as ações permitidas para o usuário atual."""
     def __init__(self, parent, janela, vaga_id):
+        """Cria os controles da tela e liga os botões às ações disponíveis."""
         super().__init__(parent, janela)
         self.vaga_id = vaga_id
         try:
             vaga = banco.obter_vaga(vaga_id)
+        # Uma falha de acesso ao banco é tratada para a tela continuar utilizável.
         except SQLAlchemyError:
             erro_banco()
             vaga = None
@@ -259,11 +311,15 @@ class TelaDetalhes(Pagina):
             self.linha_botoes([("Voltar para vagas", lambda ev: janela.ir(TelaVagas))])
 
     def candidatar(self, evento):
+        """Envia candidato, vaga e mensagem ao banco e abre as inscrições."""
         try:
+            # A conta logada fornece o candidato. A tela fornece o ID da vaga e a mensagem.
             banco.candidatar(self.janela.usuario["id"], self.vaga_id, self.mensagem.GetValue())
+        # Uma regra de validação impediu a operação. Mostramos a razão ao usuário.
         except ValueError as erro:
             avisar(str(erro), "Candidatura")
             return
+        # Uma falha de acesso ao banco é tratada para a tela continuar utilizável.
         except SQLAlchemyError:
             erro_banco()
             return
@@ -272,7 +328,9 @@ class TelaDetalhes(Pagina):
 
 
 class TelaMinhasCandidaturas(Pagina):
+    """Mostra ao candidato as inscrições e a situação de cada uma."""
     def __init__(self, parent, janela):
+        """Cria os controles da tela e liga os botões às ações disponíveis."""
         super().__init__(parent, janela)
         self.titulo("Minhas candidaturas", "Acompanhe as inscrições realizadas dentro deste aplicativo.")
         if not janela.usuario or janela.usuario["tipo"] != "candidato":
@@ -280,6 +338,7 @@ class TelaMinhasCandidaturas(Pagina):
             return
         try:
             dados = banco.minhas_candidaturas(janela.usuario["id"])
+        # Uma falha de acesso ao banco é tratada para a tela continuar utilizável.
         except SQLAlchemyError:
             erro_banco()
             return
@@ -297,7 +356,9 @@ class TelaMinhasCandidaturas(Pagina):
 
 
 class TelaPerfil(Pagina):
+    """Permite consultar e alterar telefone, cidade e apresentação profissional."""
     def __init__(self, parent, janela):
+        """Cria os controles da tela e liga os botões às ações disponíveis."""
         super().__init__(parent, janela)
         self.titulo("Meu perfil", "Informações de contato que podem aparecer para uma empresa após a candidatura.")
         if not janela.usuario:
@@ -305,6 +366,7 @@ class TelaPerfil(Pagina):
             return
         try:
             usuario = banco.obter_usuario(janela.usuario["id"])
+        # Uma falha de acesso ao banco é tratada para a tela continuar utilizável.
         except SQLAlchemyError:
             erro_banco()
             return
@@ -315,13 +377,16 @@ class TelaPerfil(Pagina):
         self.linha_botoes([("Salvar alterações", self.salvar)])
 
     def salvar(self, evento):
+        """Grava o perfil e atualiza a cópia do usuário guardada na janela."""
         try:
             banco.atualizar_perfil(self.janela.usuario["id"], self.telefone.GetValue(),
                                   self.cidade.GetValue(), self.resumo.GetValue())
             self.janela.usuario = banco.obter_usuario(self.janela.usuario["id"])
+        # Uma regra de validação impediu a operação. Mostramos a razão ao usuário.
         except ValueError as erro:
             avisar(str(erro))
             return
+        # Uma falha de acesso ao banco é tratada para a tela continuar utilizável.
         except SQLAlchemyError:
             erro_banco()
             return
@@ -329,7 +394,9 @@ class TelaPerfil(Pagina):
 
 
 class TelaEmpresa(Pagina):
+    """Mostra as vagas da empresa logada e as ações de gerenciamento."""
     def __init__(self, parent, janela):
+        """Cria os controles da tela e liga os botões às ações disponíveis."""
         super().__init__(parent, janela)
         self.titulo("Painel da empresa", "Publique vagas, encerre anúncios e consulte candidatos cadastrados.")
         if not janela.usuario or janela.usuario["tipo"] != "empresa":
@@ -347,6 +414,7 @@ class TelaEmpresa(Pagina):
                            ("Abrir/encerrar vaga", self.alternar)])
         try:
             self.vagas = banco.minhas_vagas(janela.usuario["id"])
+        # Uma falha de acesso ao banco é tratada para a tela continuar utilizável.
         except SQLAlchemyError:
             erro_banco()
             self.vagas = []
@@ -357,6 +425,8 @@ class TelaEmpresa(Pagina):
                 self.lista.SetItem(n, col, valor)
 
     def selecionada(self):
+        """Devolve a vaga da linha selecionada ou avisa se nenhuma foi escolhida."""
+        # O índice é a posição da linha visual. -1 significa que nenhuma linha foi escolhida.
         indice = self.lista.GetFirstSelected()
         if indice < 0:
             avisar("Selecione uma vaga.")
@@ -364,20 +434,24 @@ class TelaEmpresa(Pagina):
         return self.vagas[indice]
 
     def detalhar(self, evento):
+        """Abre os detalhes da vaga escolhida no painel da empresa."""
         vaga = self.selecionada()
         if vaga:
             self.janela.ir(TelaDetalhes, vaga_id=vaga["id"])
 
     def candidatos(self, evento):
+        """Abre a lista de candidatos da vaga escolhida."""
         vaga = self.selecionada()
         if vaga:
             self.janela.ir(TelaCandidatos, vaga_id=vaga["id"])
 
     def alternar(self, evento):
+        """Solicita a abertura ou o encerramento da vaga e recarrega o painel."""
         vaga = self.selecionada()
         if vaga is None:
             return
         try:
+            # not inverte o booleano. Uma vaga aberta passa a encerrada e vice-versa.
             banco.mudar_situacao_vaga(self.janela.usuario["id"], vaga["id"], not vaga["ativa"])
         except (SQLAlchemyError, ValueError):
             erro_banco()
@@ -386,7 +460,9 @@ class TelaEmpresa(Pagina):
 
 
 class TelaNovaVaga(Pagina):
+    """Recolhe os dados que a empresa precisa informar para publicar uma vaga."""
     def __init__(self, parent, janela):
+        """Cria os controles da tela e liga os botões às ações disponíveis."""
         super().__init__(parent, janela)
         self.titulo("Publicar vaga", "Somente empresas cadastradas podem criar anúncios locais.")
         if not janela.usuario or janela.usuario["tipo"] != "empresa":
@@ -397,6 +473,7 @@ class TelaNovaVaga(Pagina):
         self.descricao = self.campo("Descrição das atividades", multiline=True)
         self.requisitos = self.campo("Requisitos (opcional)", multiline=True)
         self.cidade = self.campo("Cidade", CIDADE_PADRAO)
+        # Choice permite escolher entre opções previamente definidas.
         self.modalidade = self.escolha("Modalidade", ["Presencial", "Híbrido", "Remoto"])
         self.contrato = self.escolha("Tipo de contrato", ["Estágio", "CLT", "Jovem Aprendiz", "Temporário"])
         self.remuneracao = self.campo("Bolsa ou salário (opcional)", "Não informada")
@@ -404,15 +481,20 @@ class TelaNovaVaga(Pagina):
                            ("Cancelar", lambda ev: janela.ir(TelaEmpresa))])
 
     def salvar(self, evento):
+        """Reúne os dados do formulário e pede ao banco a publicação da vaga."""
         try:
+            # O primeiro argumento identifica a empresa logada. Os demais vêm do formulário.
             banco.criar_vaga(
                 self.janela.usuario["id"], self.titulo_vaga.GetValue(), self.area.GetValue(),
                 self.descricao.GetValue(), self.requisitos.GetValue(), self.cidade.GetValue(),
+                # GetStringSelection() devolve o texto selecionado no Choice.
                 self.modalidade.GetStringSelection(), self.contrato.GetStringSelection(),
                 self.remuneracao.GetValue())
+        # Uma regra de validação impediu a operação. Mostramos a razão ao usuário.
         except ValueError as erro:
             avisar(str(erro), "Verifique os dados da vaga")
             return
+        # Uma falha de acesso ao banco é tratada para a tela continuar utilizável.
         except SQLAlchemyError:
             erro_banco()
             return
@@ -421,7 +503,9 @@ class TelaNovaVaga(Pagina):
 
 
 class TelaCandidatos(Pagina):
+    """Permite à empresa consultar e avaliar os candidatos de sua própria vaga."""
     def __init__(self, parent, janela, vaga_id):
+        """Cria os controles da tela e liga os botões às ações disponíveis."""
         super().__init__(parent, janela)
         self.vaga_id = vaga_id
         self.titulo("Candidatos da vaga", "O acesso é permitido apenas à empresa que publicou esta vaga.")
@@ -430,9 +514,11 @@ class TelaCandidatos(Pagina):
             return
         try:
             self.registros = banco.candidatos_da_vaga(janela.usuario["id"], vaga_id)
+        # Uma regra de validação impediu a operação. Mostramos a razão ao usuário.
         except ValueError as erro:
             self.paragrafo(str(erro))
             return
+        # Uma falha de acesso ao banco é tratada para a tela continuar utilizável.
         except SQLAlchemyError:
             erro_banco()
             return
@@ -453,6 +539,8 @@ class TelaCandidatos(Pagina):
                            ("Voltar ao painel", lambda ev: janela.ir(TelaEmpresa))])
 
     def selecionado(self):
+        """Devolve os dados do candidato selecionado na lista visual."""
+        # O índice é a posição da linha visual. -1 significa que nenhuma linha foi escolhida.
         indice = self.lista.GetFirstSelected()
         if indice < 0:
             avisar("Selecione um candidato da lista.")
@@ -460,6 +548,7 @@ class TelaCandidatos(Pagina):
         return self.registros[indice]
 
     def detalhes(self, evento):
+        """Exibe contato, apresentação e mensagem do candidato escolhido."""
         pessoa = self.selecionado()
         if not pessoa:
             return
@@ -468,15 +557,19 @@ class TelaCandidatos(Pagina):
               f"Mensagem da candidatura:\n{pessoa['mensagem']}", "Detalhes do candidato")
 
     def salvar_status(self, evento):
+        """Grava a situação escolhida e recria a tela para mostrar o resultado."""
         pessoa = self.selecionado()
         if not pessoa:
             return
         try:
+            # O banco também confere se esta inscrição pertence a uma vaga da empresa.
             banco.mudar_status_candidatura(self.janela.usuario["id"], pessoa["id"],
                                            self.status.GetStringSelection())
+        # Uma regra de validação impediu a operação. Mostramos a razão ao usuário.
         except ValueError as erro:
             avisar(str(erro))
             return
+        # Uma falha de acesso ao banco é tratada para a tela continuar utilizável.
         except SQLAlchemyError:
             erro_banco()
             return
@@ -485,7 +578,9 @@ class TelaCandidatos(Pagina):
 
 
 class TelaExternas(Pagina):
+    """Consulta anúncios da Adzuna e permite abrir o site de origem."""
     def __init__(self, parent, janela):
+        """Cria os controles da tela e liga os botões às ações disponíveis."""
         super().__init__(parent, janela)
         self.titulo("Vagas externas — Adzuna", 
                     "Consulte anúncios reais com a API Adzuna. É preciso internet e credenciais válidas no .env.")
@@ -504,9 +599,11 @@ class TelaExternas(Pagina):
         self.lista.Bind(wx.EVT_LIST_ITEM_ACTIVATED, self.abrir)
         self.linha_botoes([("Ver descrição", self.detalhes),
                            ("Abrir anúncio original", self.abrir)])
+        # Guarda os dados completos. A lista visual mostra só algumas colunas desses dados.
         self.vagas = []
 
     def pesquisar(self, evento):
+        """Consulta a Adzuna, trata falhas e mostra os anúncios recebidos."""
         self.aviso.SetLabel("Consultando... (pode levar alguns segundos)")
         wx.YieldIfNeeded()  # Atualiza o aviso antes da chamada HTTP síncrona (simples para estudar).
         try:
@@ -515,6 +612,7 @@ class TelaExternas(Pagina):
         except ErroAPI as erro:
             self.aviso.SetLabel(str(erro))
             return
+        # Limpa as linhas visuais antes de exibir a nova consulta, evitando duplicação.
         self.lista.DeleteAllItems()
         for vaga in self.vagas:
             i = self.lista.InsertItem(self.lista.GetItemCount(), vaga["titulo"])
@@ -523,6 +621,8 @@ class TelaExternas(Pagina):
         self.aviso.SetLabel(f"{len(self.vagas)} vaga(s) retornada(s). A candidatura acontece no site de origem.")
 
     def selecionada(self):
+        """Devolve o anúncio externo escolhido na lista."""
+        # O índice é a posição da linha visual. -1 significa que nenhuma linha foi escolhida.
         indice = self.lista.GetFirstSelected()
         if indice < 0:
             avisar("Selecione um anúncio externo.")
@@ -530,6 +630,7 @@ class TelaExternas(Pagina):
         return self.vagas[indice]
 
     def detalhes(self, evento):
+        """Mostra uma parte da descrição do anúncio externo selecionado."""
         vaga = self.selecionada()
         if vaga:
             avisar(f"{vaga['titulo']}\n{vaga['empresa']} — {vaga['cidade']}\n\n"
@@ -537,6 +638,7 @@ class TelaExternas(Pagina):
                   "Descrição externa")
 
     def abrir(self, evento):
+        """Valida o endereço do anúncio e abre o navegador do computador."""
         vaga = self.selecionada()
         if vaga is None:
             return
@@ -551,7 +653,9 @@ class TelaExternas(Pagina):
 
 
 class TelaSobre(Pagina):
+    """Explica ao usuário o objetivo do projeto e as tecnologias utilizadas."""
     def __init__(self, parent, janela):
+        """Cria os controles da tela e liga os botões às ações disponíveis."""
         super().__init__(parent, janela)
         self.titulo("Sobre o ConectaVagas", "Protótipo acadêmico para inclusão no mercado de trabalho da região.")
         self.paragrafo("1. Interface: Python + wxPython (telas no app.py).\n"
@@ -567,6 +671,7 @@ class JanelaPrincipal(wx.Frame):
     """Guarda a sessão do usuário e coordena a navegação entre as telas."""
 
     def __init__(self):
+        """Cria a janela, o menu e a área que receberá cada página."""
         super().__init__(None, title="ConectaVagas | wxPython + MySQL",
                          size=(1110, 760))
         self.SetMinSize((950, 620))
@@ -584,6 +689,8 @@ class JanelaPrincipal(wx.Frame):
         self.ir(TelaInicio)
 
     def montar_menu(self):
+        """Reconstrói os botões conforme visitante, candidato ou empresa."""
+        # Remove os botões antigos para reconstruir o menu após login, logout ou navegação.
         self.nav_layout.Clear(delete_windows=True)
         botoes = [("Início", lambda ev: self.ir(TelaInicio)),
                   ("Vagas", lambda ev: self.ir(TelaVagas)),
@@ -607,24 +714,30 @@ class JanelaPrincipal(wx.Frame):
 
     def ir(self, pagina, **dados):
         """Remove a tela antiga e desenha a nova; a janela principal permanece."""
+        # A página anterior é retirada do sizer e destruída antes da criação da próxima.
         if self.pagina_atual is not None:
             self.estrutura.Detach(self.pagina_atual)
             self.pagina_atual.Destroy()
         self.montar_menu()
+        # pagina é uma classe, como TelaDetalhes. **dados entrega argumentos como vaga_id.
         self.pagina_atual = pagina(self.raiz, self, **dados)
+        # O valor 1 dá à página o espaço disponível. EXPAND faz ela ocupar a largura.
         self.estrutura.Add(self.pagina_atual, 1, wx.EXPAND)
         self.pagina_atual.FitInside()
         self.raiz.Layout()
         self.Layout()
 
     def sair(self, evento):
+        """Apaga o usuário da sessão visual e volta ao início."""
         self.usuario = None
         self.ir(TelaInicio)
 
 
 class Programa(wx.App):
     def OnInit(self):
+        """Inicia o banco e só mostra a janela principal se a conexão funcionar."""
         try:
+            # Lê a configuração do MySQL e cria as tabelas que ainda estiverem ausentes.
             banco.iniciar_banco()
         except (SQLAlchemyError, ValueError, OSError) as erro:
             wx.MessageBox("Não foi possível iniciar o MySQL.\n\n"
@@ -634,10 +747,13 @@ class Programa(wx.App):
                           f"Detalhes: {erro}", "Conexão com MySQL", wx.OK | wx.ICON_ERROR)
             return False
         janela = JanelaPrincipal()
+        # Torna a janela visível depois de a conexão com o banco estar pronta.
         janela.Show()
         self.SetTopWindow(janela)
         return True
 
 
+# Este trecho inicia o programa quando o arquivo app.py é executado diretamente.
 if __name__ == "__main__":
+    # MainLoop mantém o aplicativo aberto aguardando cliques e outros eventos.
     Programa(False).MainLoop()

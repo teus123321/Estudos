@@ -31,6 +31,7 @@ def url_segura(url):
 
 def formatar_vaga(item):
     """Transforma um registro JSON da Adzuna em um dicionário simples para a tela."""
+    # get e os valores padrão permitem lidar com campos ausentes na resposta externa.
     location = item.get("location") or {}
     area = location.get("display_name", "Não informada") if isinstance(location, dict) else "Não informada"
     company = item.get("company") or {}
@@ -53,6 +54,7 @@ def buscar_vagas_externas(termo="estágio", local=CIDADE_PADRAO, limite=15):
 
     if not 1 <= limite <= 50:
         raise ValueError("O limite deve ser entre 1 e 50.")
+    # Codifica os parâmetros da busca para formar uma URL válida, inclusive espaços e acentos.
     params = urlencode({"app_id": app_id, "app_key": app_key,
                         "results_per_page": limite,
                         "what": termo.strip() or "estágio",
@@ -61,8 +63,11 @@ def buscar_vagas_externas(termo="estágio", local=CIDADE_PADRAO, limite=15):
     url = f"https://api.adzuna.com/v1/api/jobs/br/search/1?{params}"
     request = Request(url, headers={"Accept": "application/json", "User-Agent": "ConectaVagas-Academico/1.0"})
     try:
+        # Abre a conexão com prazo de 10 segundos. O with fecha a resposta ao terminar.
         with urlopen(request, timeout=10) as response:
+            # Converte o JSON recebido pela internet em dicionários e listas Python.
             resposta = json.load(response)
+    # O servidor respondeu com erro. O código HTTP ajuda a explicar o motivo ao usuário.
     except HTTPError as erro:
         if erro.code in (401, 403):
             raise ErroAPI("API recusou as credenciais. Confira app_id e app_key.") from erro
@@ -71,10 +76,12 @@ def buscar_vagas_externas(termo="estágio", local=CIDADE_PADRAO, limite=15):
         raise ErroAPI(f"Não foi possível consultar a API (HTTP {erro.code}).") from erro
     except (URLError, TimeoutError, OSError, json.JSONDecodeError) as erro:
         raise ErroAPI("Falha na consulta. Verifique internet, conexão e serviço Adzuna.") from erro
+    # Padroniza os anúncios válidos para os campos que a tela espera receber.
     return [formatar_vaga(item) for item in resposta.get("results", []) if isinstance(item, dict)]
 
 
 def url_pesquisa_linkedin(termo="estágio", local=CIDADE_PADRAO):
     """Link de pesquisa para o site do LinkedIn, SEM extrair dados por API."""
+    # Codifica os parâmetros da busca para formar uma URL válida, inclusive espaços e acentos.
     params = urlencode({"keywords": termo.strip() or "estágio", "location": local.strip() or "Brasil"})
     return "https://www.linkedin.com/jobs/search/?" + params
