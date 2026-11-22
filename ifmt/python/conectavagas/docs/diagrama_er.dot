@@ -1,53 +1,8 @@
-digraph ConectaVagas {
-  graph [label="ConectaVagas  •  Diagrama Entidade-Relacionamento (modelo lógico)", labelloc=t, fontsize=20, fontname="DejaVu Sans", bgcolor="white", pad=0.35, ranksep=0.85, nodesep=0.65, splines=polyline];
-  node [shape=plaintext, fontname="DejaVu Sans"];
-  edge [fontname="DejaVu Sans", fontsize=11, color="#3767a6", penwidth=1.8, arrowsize=0.8];
-  usuarios [label=<
-    <TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="7" COLOR="#4C78A8">
-      <TR><TD BGCOLOR="#28568e" ALIGN="CENTER"><FONT COLOR="white" POINT-SIZE="16"><B>USUARIOS</B></FONT></TD></TR>
-      <TR><TD ALIGN="LEFT"><B>PK id</B>: INT</TD></TR>
-      <TR><TD ALIGN="LEFT">nome: VARCHAR(100)</TD></TR>
-      <TR><TD ALIGN="LEFT">email: VARCHAR(150) UNIQUE</TD></TR>
-      <TR><TD ALIGN="LEFT">salt: VARCHAR(32)</TD></TR>
-      <TR><TD ALIGN="LEFT">hash_senha: VARCHAR(64)</TD></TR>
-      <TR><TD ALIGN="LEFT">tipo: VARCHAR(15)</TD></TR>
-      <TR><TD ALIGN="LEFT">telefone: VARCHAR(25)</TD></TR>
-      <TR><TD ALIGN="LEFT">cidade: VARCHAR(100)</TD></TR>
-      <TR><TD ALIGN="LEFT">resumo: TEXT</TD></TR>
-      <TR><TD ALIGN="LEFT">criado_em: DATETIME</TD></TR>
-    </TABLE>
-  >];
-  vagas [label=<
-    <TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="7" COLOR="#32946e">
-      <TR><TD BGCOLOR="#1f805e" ALIGN="CENTER"><FONT COLOR="white" POINT-SIZE="16"><B>VAGAS</B></FONT></TD></TR>
-      <TR><TD ALIGN="LEFT"><B>PK id</B>: INT</TD></TR>
-      <TR><TD ALIGN="LEFT"><B>FK empresa_id</B>: INT</TD></TR>
-      <TR><TD ALIGN="LEFT">titulo: VARCHAR(120)</TD></TR>
-      <TR><TD ALIGN="LEFT">area: VARCHAR(80)</TD></TR>
-      <TR><TD ALIGN="LEFT">descricao: TEXT</TD></TR>
-      <TR><TD ALIGN="LEFT">requisitos: TEXT</TD></TR>
-      <TR><TD ALIGN="LEFT">cidade: VARCHAR(100)</TD></TR>
-      <TR><TD ALIGN="LEFT">modalidade: VARCHAR(25)</TD></TR>
-      <TR><TD ALIGN="LEFT">contrato: VARCHAR(25)</TD></TR>
-      <TR><TD ALIGN="LEFT">remuneracao: VARCHAR(100)</TD></TR>
-      <TR><TD ALIGN="LEFT">ativa: BOOLEAN</TD></TR>
-      <TR><TD ALIGN="LEFT">criada_em: DATETIME</TD></TR>
-    </TABLE>
-  >];
-  candidaturas [label=<
-    <TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="7" COLOR="#b8872e">
-      <TR><TD BGCOLOR="#a37526" ALIGN="CENTER"><FONT COLOR="white" POINT-SIZE="16"><B>CANDIDATURAS</B></FONT></TD></TR>
-      <TR><TD ALIGN="LEFT"><B>PK id</B>: INT</TD></TR>
-      <TR><TD ALIGN="LEFT"><B>FK candidato_id</B>: INT</TD></TR>
-      <TR><TD ALIGN="LEFT"><B>FK vaga_id</B>: INT</TD></TR>
-      <TR><TD ALIGN="LEFT">mensagem: TEXT</TD></TR>
-      <TR><TD ALIGN="LEFT">status: VARCHAR(20)</TD></TR>
-      <TR><TD ALIGN="LEFT">enviada_em: DATETIME</TD></TR>
-      <TR><TD ALIGN="LEFT">UNIQUE(candidato_id, vaga_id)</TD></TR>
-    </TABLE>
-  >];
-  { rank=same; usuarios; vagas; candidaturas; }
-  usuarios -> vagas [label="1 empresa : N vagas", minlen=2, constraint=true];
-  vagas -> candidaturas [label="1 vaga : N candidaturas", minlen=2];
-  usuarios -> candidaturas [label="1 candidato : N candidaturas", constraint=false, minlen=1, style=dashed, color="#9A72B1"];
+digraph ER {
+ graph [rankdir=LR, bgcolor="white", pad=0.4, nodesep=1, ranksep=1.2];
+ node [shape=record, fontname="DejaVu Sans", fontsize=12, style=filled, fillcolor="#eef4fa"];
+ edge [fontname="DejaVu Sans", fontsize=11];
+ usuarios [label="USUARIOS|PK id INT\lnome VARCHAR(100)\lemail VARCHAR(150) UNIQUE\lsenha VARCHAR(97)\l"];
+ vagas [label="VAGAS|PK id INT\lFK usuario_id INT\ltitulo VARCHAR(120)\lempresa VARCHAR(100)\lcidade VARCHAR(100)\ldescricao TEXT\lcontato VARCHAR(150)\l"];
+ usuarios -> vagas [label="1 publica 0..N\nusuarios.id = vagas.usuario_id"];
 }
