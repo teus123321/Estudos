@@ -25,3 +25,4 @@ Para aproximar a prática do OCR de chassi e motor, registre a diferença entre 
 - **Curso 1 · Semana 1 · Aula:** [Função de custo e intuição da regressão linear](coursera/curso-1/semana-1/aula-funcao-de-custo/README.md) — 9 fotos da aula, fórmulas explicadas passo a passo e exemplo executável em Python.
 - **Curso 1 · Semana 1 · Lab 03** — [Função de custo na regressão linear](coursera/curso-1/semana-1/lab-03-funcao-de-custo/funcao_de_custo.ipynb). Notebook em português com cálculo à mão, gráficos e exercícios de revisão.
 - **Curso 1 · Semana 1 · Lab 04** — [Descida do gradiente na regressão linear](coursera/curso-1/semana-1/lab-04-descida-do-gradiente/descida_do_gradiente.ipynb). Derivadas, primeira iteração à mão e comparação entre taxas de aprendizado.
+- **Curso 1 · Semana 2 · Lab 01 (parte 1)** — [Python, NumPy e vetorização](coursera/curso-1/semana-2/lab-01-vetorizacao/vetorizacao-parte-1.ipynb). Uma previsão calculada à mão, com laço e com produto escalar.
