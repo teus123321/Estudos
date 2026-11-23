@@ -1,0 +1,8 @@
+digraph ER {
+ graph [rankdir=LR, bgcolor="white", pad=0.4, nodesep=1, ranksep=1.2];
+ node [shape=record, fontname="DejaVu Sans", fontsize=12, style=filled, fillcolor="#eef4fa"];
+ edge [fontname="DejaVu Sans", fontsize=11];
+ usuarios [label="USUARIOS|PK id INT\lnome VARCHAR(100)\lemail VARCHAR(150) UNIQUE\lsenha VARCHAR(97)\l"];
+ vagas [label="VAGAS|PK id INT\lFK usuario_id INT\ltitulo VARCHAR(120)\lempresa VARCHAR(100)\lcidade VARCHAR(100)\ldescricao TEXT\lcontato VARCHAR(150)\l"];
+ usuarios -> vagas [label="1 publica 0..N\nusuarios.id = vagas.usuario_id"];
+}
